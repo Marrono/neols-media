@@ -48,7 +48,61 @@ def find(query, limit=15):
                "artist": artist[:60], "thumb": (ii.get("thumburl") or ii.get("url") or "").split("?")[0]}
 
 
+LIB = "/home/claude/neols-media/photos"
+
+
+def thumb_url(title, width=1280):
+    """API 없이 표준 썸네일 주소 만들기 (위키미디어 API가 막혔을 때)."""
+    import hashlib
+    n = title.replace("File:", "").replace(" ", "_")
+    h = hashlib.md5(n.encode()).hexdigest()
+    q = urllib.parse.quote(n)
+    return f"https://thumb.wikimedia.org/wikipedia/commons/thumb/{h[0]}/{h[:2]}/{q}/{width}px-{q}"
+
+
+def save_to_library(c, out, tags):
+    """받은 사진을 저장소의 사진 보관함에 출처와 함께 남겨 재사용."""
+    import os, shutil
+    os.makedirs(LIB, exist_ok=True)
+    idx_path = os.path.join(LIB, "index.json")
+    idx = json.load(open(idx_path, encoding="utf-8")) if os.path.exists(idx_path) else []
+    if any(x["title"] == c["title"] for x in idx):
+        return
+    fname = re.sub(r"[^A-Za-z0-9가-힣._-]+", "_", c["title"].replace("File:", ""))[:80]
+    if not fname.lower().endswith(".jpg"):
+        fname += ".jpg"
+    shutil.copy(out, os.path.join(LIB, fname))
+    idx.append({"file": fname, "title": c["title"], "credit": c["credit"], "license": c["license"],
+                "page": c.get("page"), "tags": tags})
+    json.dump(idx, open(idx_path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+
 def main():
+    # 보관함 검색: python3 wiki_photo.py --lib "<키워드>"
+    if sys.argv[1] == "--lib":
+        import os
+        idx_path = os.path.join(LIB, "index.json")
+        idx = json.load(open(idx_path, encoding="utf-8")) if os.path.exists(idx_path) else []
+        kw = sys.argv[2].lower()
+        for x in idx:
+            if kw in (" ".join(x["tags"]) + " " + x["title"]).lower():
+                print(json.dumps({**x, "path": os.path.join(LIB, x["file"])}, ensure_ascii=False))
+        return
+    # API 없이 바로 받기: python3 wiki_photo.py --direct "<File:제목>" <저장.jpg> "<작가>" "<라이선스>" "<태그,태그>"
+    if sys.argv[1] == "--direct":
+        import io
+        from PIL import Image
+        title, out, artist, lic = sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5]
+        tags = sys.argv[6].split(",") if len(sys.argv) > 6 else []
+        with urllib.request.urlopen(urllib.request.Request(thumb_url(title), headers=UA), timeout=60) as r:
+            im = Image.open(io.BytesIO(r.read())).convert("RGB")
+        im.save(out, "JPEG", quality=90)
+        credit = f"{artist} / Wikimedia Commons / {lic}" + (" · 잘라서 사용" if lic.upper().startswith("CC BY") else "")
+        c = {"title": title, "license": lic, "artist": artist, "credit": credit, "path": out,
+             "page": "https://commons.wikimedia.org/wiki/" + title.replace(" ", "_")}
+        save_to_library(c, out, tags)
+        print(json.dumps(c, ensure_ascii=False))
+        return
     # 후보 보기: python3 wiki_photo.py --list "<검색어>"   → 제목·라이선스 목록 (사람이/Claude가 제목을 보고 고름)
     # 내려받기: python3 wiki_photo.py "<검색어>" <저장경로> [--pick "<File:제목>"]
     if sys.argv[1] == "--list":
@@ -70,7 +124,8 @@ def main():
         im.thumbnail((1600, 1600))
         im.save(out, "JPEG", quality=90)
         c["path"] = out
-        c["credit"] = f"{c['artist']} / Wikimedia Commons / {c['license']}"
+        c["credit"] = f"{c['artist']} / Wikimedia Commons / {c['license']}" + (" · 잘라서 사용" if c["license"].upper().startswith("CC BY") else "")
+        save_to_library(c, out, [q])
         print(json.dumps(c, ensure_ascii=False))
         return
     print(json.dumps({"error": "no reusable photo found"}, ensure_ascii=False))
