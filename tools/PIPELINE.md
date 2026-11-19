@@ -11,8 +11,9 @@
      ③ 제목을 알면 API 없이 `--direct "<File:제목>" <저장.jpg> "<작가>" "<라이선스>" "<태그>"`
      ④ (허용 목록에 있으면) Openverse
      인물 소재는 인물 사진 대신 관련 장소·사물 사진(예: 국립서울현충원). 사람이 알아볼 수 있게 나온 사진 제외.
-     끝내 사진을 못 구하면 초안을 만들지 말고 candidate를 selected로 둔 채 note:"사진 찾는 중" 기록 → 다음 회차 재시도.
-     1시간 넘게 못 구하면 SendUserMessage로 알리고 사진 없이 만들지 여부를 물어봄.
+     정확한 사진이 없으면 문제없는 관련 사진(같은 장소·기관 건물·대표 사물·풍경)으로 대체. 최대한 구하기.
+     끝내 못 구하면 **초안은 그대로 만들고** drafts에 photoPending:true 저장 → 사이트에 '⚠️ 표지 사진 없음' 경고 표시.
+     매 회차마다 photoPending 초안(아직 pending인 것)의 사진을 다시 찾아, 구하면 다시 렌더·푸시·업로드하고 photoPending 삭제.
    이미지(그래픽):
    - visual: 직접 만든 그래픽. {"type":"bars","title","data":[[라벨,값]...],"fmt":"{}만","source"} /
      {"type":"timeline","title","data":[[연도,설명]...],"source"} / {"type":"big","title","value","label","sub","source"}.
