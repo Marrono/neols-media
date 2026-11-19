@@ -11,7 +11,9 @@
      숫자는 기사·공식 자료로 확인한 것만, source에 자료 출처.
    - photo: 위키미디어 공용 사진 {"path","credit":"작가 / Wikimedia Commons / 라이선스"}.
      CC0·퍼블릭 도메인·CC BY만 사용(CC BY-SA·NC·ND 제외). 실존 인물이 알아볼 수 있게 나온 사진은 쓰지 않음.
-     commons API로 검색 → 파일 페이지의 라이선스·작가 확인 → 1600px 썸네일 다운로드. 접속이 막혀 있으면 photo 생략.
+     `python3 wiki_photo.py --list "Category:<분류명>"` (또는 검색어)로 후보·라이선스 확인 → 제목 보고 맞는 사진 선택 →
+     `python3 wiki_photo.py "<같은 검색어>" <저장.jpg> --pick "File:<제목>"` (1280px 표준 썸네일, 결과 JSON의 credit 사용).
+     API 429가 나면 1분 쉬고 한 번만 재시도, 그래도 안 되면 photo 생략(그래픽만).
 2. 카드: `python3 render.py <json> <out>` → 표지(사진 있으면 상단 사진+하단 출처) / BY THE NUMBERS 그래픽(visual 있을 때) / NOW+THEN / 홍보.
 3. 릴스: `python3 reel.py <json> <out>` (무음 1080x1920).
 4. /home/claude/neols-media/<날짜-id>/ 에 card_XX.jpg(quality 92), reel.mp4, reel_cover.jpg → commit(attribution) → `git -c push.negotiate=true push`.
