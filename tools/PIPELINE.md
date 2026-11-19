@@ -3,8 +3,8 @@
 사이트 slug 77346c44-3520-4b60-a03e-fa5bbc4e0d06 · Instagram account 17841480857834317 (@neols.news)
 
 ## A. 제작 대기 후보 제작 (매 회차 확인)
-- 제작 대상: status:"selected" 이고 **decidedAt(제작 대기로 넘어간 시각)에서 4시간 이상 지난 것**.
-  4시간이 안 된 것은 그대로 둠. 사용자가 대화에서 "만들어줘"(지금 만들기)라고 하면 시간과 상관없이 즉시 제작.
+- 제작 대상: status:"selected" 이고 **decidedAt(제작 대기로 넘어간 시각)에서 70분 이상 지난 것**.
+  70분이 안 된 것은 그대로 둠. 사용자가 대화에서 "만들어줘"(지금 만들기)라고 하면 시간과 상관없이 즉시 제작.
 1. candidates 중 status:"selected" 각각 → 소재 1개짜리 JSON(items 1개, handle "@neols.news", slogan 포함).
    항목: category, title(\n 줄바꿈), points 3개, then_label, then, link, source. 사실 확인된 것만.
    **표지 사진은 필수** — 찾는 순서:
@@ -60,5 +60,5 @@
 - **중복 예약 방지**: 다음 회차를 예약하기 전에 meta/status.nextRun을 확인해서, 이미 지금보다 미래 시각이면(다른 회차가 예약해 둔 것) 새로 예약하지 않음. 예약할 때는 nextRun을 먼저 갱신.
 - meta/status lastRun·nextRun 갱신(ifVersion).
 - 다음 회차 send_later: 07:00~23:00(KST) 15분 뒤(:00/:15/:30/:45), 23:00 이후 다음날 07:00.
-- :15/:30/:45 회차는 A(4시간 지난 제작 대기)·photoPending·meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
+- :15/:30/:45 회차는 A(70분 지난 제작 대기)·photoPending·meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
 - 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
