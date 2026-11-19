@@ -7,15 +7,15 @@
   70분이 안 된 것은 그대로 둠. 사용자가 대화에서 "만들어줘"(지금 만들기)라고 하면 시간과 상관없이 즉시 제작.
 1. candidates 중 status:"selected" 각각 → 소재 1개짜리 JSON(items 1개, handle "@neols.news", slogan 포함).
    항목: category, title(\n 줄바꿈), points 3개, then_label, then, link, source. 사실 확인된 것만.
-   **표지 사진은 필수** — 찾는 순서:
-     ① 사진 보관함 `python3 wiki_photo.py --lib "<키워드>"` (neols-media/photos, 이전에 받은 사진 재사용)
-     ② 위키미디어 검색 `--list` → `--pick` (받은 사진은 자동으로 보관함에 저장)
-     ③ 제목을 알면 API 없이 `--direct "<File:제목>" <저장.jpg> "<작가>" "<라이선스>" "<태그>"`
-     ④ (허용 목록에 있으면) Openverse
-     인물 소재는 인물 사진 대신 관련 장소·사물 사진(예: 국립서울현충원). 사람이 알아볼 수 있게 나온 사진 제외.
-     정확한 사진이 없으면 문제없는 관련 사진(같은 장소·기관 건물·대표 사물·풍경)으로 대체. 최대한 구하기.
-     끝내 못 구하면 **초안은 그대로 만들고** drafts에 photoPending:true 저장 → 사이트에 '⚠️ 표지 사진 없음' 경고 표시.
-     매 회차마다 photoPending 초안(아직 pending인 것)의 사진을 다시 찾아, 구하면 다시 렌더·푸시·업로드하고 photoPending 삭제.
+   **표지 사진 찾는 순서** (위에서 안 되면 다음 단계로):
+     ① 위키미디어 공용 — `python3 wiki_photo.py --list "<검색어 또는 Category:분류>"` → `--pick`
+        (API가 429면 1분 쉬고 1번 재시도. 제목을 알면 `--direct`로 API 없이 받기)
+     ② 다른 대안 — Openverse(api.openverse.org, 허용 목록에 있을 때) 등 CC0·퍼블릭 도메인·CC BY 사진 검색
+     ③ 사진 보관함에서 비슷한 사진 — `python3 wiki_photo.py --lib "<키워드>"` (neols-media/photos, 이전에 받은 사진·출처 재사용)
+     ④ 그래도 없으면 **표지 사진 없이 초안 생성** → drafts에 photoPending:true → 사이트에 '⚠️ 표지 사진 없음' 경고.
+        이후 매 회차마다 photoPending 초안의 사진을 ①부터 다시 시도해, 구하면 다시 렌더·푸시·업로드하고 photoPending 삭제.
+     공통 원칙: 인물 소재는 인물 대신 관련 장소·사물 사진. 얼굴을 알아볼 수 있는 사람이 나온 사진 제외.
+       ①②에서 받은 사진은 자동으로 보관함에 저장. CC BY는 credit 끝에 "· 잘라서 사용".
    이미지(그래픽):
    - visual: 직접 만든 그래픽. {"type":"bars","title","data":[[라벨,값]...],"fmt":"{}만","source"} /
      {"type":"timeline","title","data":[[연도,설명]...],"source"} / {"type":"big","title","value","label","sub","source"}.
