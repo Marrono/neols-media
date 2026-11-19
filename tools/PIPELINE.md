@@ -2,7 +2,7 @@
 
 사이트 slug 77346c44-3520-4b60-a03e-fa5bbc4e0d06 · Instagram account 17841480857834317 (@neols.news)
 
-## A. 선택된 후보 제작 (먼저)
+## A. 선택된 후보 제작 (먼저, 매 회차 — 15분마다)
 1. candidates 중 status:"selected" 각각 → 소재 1개짜리 JSON(items 1개, handle "@neols.news", slogan 포함).
    항목: category, title(\n 줄바꿈), points 3개, then_label, then, link, source. 사실 확인된 것만.
    이미지(필수로 시도):
@@ -25,10 +25,13 @@
    images/video, publicImages 또는 publicVideo+publicCover, caption, hashtags 최대 5개: #Neols #오늘의뉴스 + 주제 3개).
 6. 해당 candidate → status:"made", draftIds.
 
-## B. 인기 급상승 소재 감지 (정해진 개수 없음)
+## B. 인기 급상승 소재 감지 (정해진 개수 없음, 정각 회차에만)
 1. meta/request 가 status:"requested" 면 working → hint 주제 우선으로 후보 1~5개 → done(doneAt, result).
-2. 급상승 신호 모으기:
-   - Google 트렌드 한국 급상승 RSS: `curl -s "https://trends.google.com/trending/rss?geo=KR"` (허용 목록에 있을 때만)
+2. 급상승 신호 모으기 (**네이버 우선**):
+   - 1순위 네이버 뉴스 '많이 본 뉴스' 랭킹: `python3 naver_rank.py` (news.naver.com 허용 시).
+     여러 언론사 상위 3위 안에 같은 사건이 겹치면 급상승으로 봄. 자주 나온 단어 목록 참고.
+     허용 안 돼 있으면 WebSearch로 "네이버 많이 본 뉴스" 등 검색해 보완.
+   - 2순위 Google 트렌드 한국 급상승 RSS: `curl -s "https://trends.google.com/trending/rss?geo=KR"` (허용 목록에 있을 때만)
    - WebSearch: "많이 본 뉴스 오늘", "실시간 인기 뉴스", "급상승 검색어" 등으로 포털 랭킹·속보가 실린 결과 확인
 3. meta/seen.topics(최근 감지한 주제 키워드 배열, 최대 80개)와 비교해 **새로 떠오른** 주제만 고름.
    여러 매체가 동시에 다루거나 랭킹 상위에 새로 올라온 국내 이슈 + 검증 가능한 THEN이 있는 것만.
@@ -38,5 +41,6 @@
 
 ## C. 마무리
 - meta/status lastRun·nextRun 갱신(ifVersion).
-- 다음 회차 send_later: 07:00~23:00(KST) 1시간 뒤(정각), 23:00 이후 다음날 07:00.
+- 다음 회차 send_later: 07:00~23:00(KST) 15분 뒤(:00/:15/:30/:45), 23:00 이후 다음날 07:00.
+- :15/:30/:45 회차는 A와 meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
 - 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
