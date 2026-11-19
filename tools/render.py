@@ -173,8 +173,8 @@ def item_card(d, i, it):
     .num span {{ color:#B5B3AC; font-weight:600; }}
     .cat {{ position:absolute; top:196px; right:88px; font-size:26px; font-weight:700;
       border:2px solid #111; border-radius:40px; padding:6px 26px; }}
-    .title {{ position:absolute; top:280px; left:86px; right:88px; font-size:84px; font-weight:900; line-height:1.22; }}
-    ul {{ position:absolute; top:530px; left:88px; right:88px; list-style:none; }}
+    .flow {{ position:absolute; top:280px; left:86px; right:88px; }} .title {{ font-size:84px; font-weight:900; line-height:1.22; }}
+    ul {{ margin-top:34px; list-style:none; }}
     li {{ font-size:34px; font-weight:500; line-height:1.45; padding:16px 0; color:#222;
       display:flex; align-items:flex-start; }}
     li .dot {{ margin-top:20px; flex:none; }}
@@ -194,8 +194,8 @@ def item_card(d, i, it):
     body = (header(d)
             + (f"<div class='num'>{i+1:02d} <span>/ {n:02d}</span></div>" if n > 1 else f"<div class='num'>NOW</div>")
             + f"<div class='cat'>{esc(it['category'])}</div>"
-            + f"<div class='title'>{esc(it['title'])}</div>"
-            + f"<ul>{pts}</ul>"
+            + f"<div class='flow'><div class='title'>{esc(it['title'])}</div>"
+            + f"<ul>{pts}</ul></div>"
             + f"<div class='then'><div class='lab'><span>THEN</span>{esc(it['then_label'])}</div>"
               f"<p class='old'>{esc(it['then'])}</p><p class='now'><b>NOW →</b> {esc(it['link'])}</p></div>"
             + f"<div class='foot'><span>출처 · {esc(it['source'])}</span><span>{d['handle']}</span></div>")
