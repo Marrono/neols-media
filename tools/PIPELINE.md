@@ -5,7 +5,15 @@
 ## A. 선택된 후보 제작 (먼저, 매 회차 — 15분마다)
 1. candidates 중 status:"selected" 각각 → 소재 1개짜리 JSON(items 1개, handle "@neols.news", slogan 포함).
    항목: category, title(\n 줄바꿈), points 3개, then_label, then, link, source. 사실 확인된 것만.
-   이미지(필수로 시도):
+   **표지 사진은 필수** — 찾는 순서:
+     ① 사진 보관함 `python3 wiki_photo.py --lib "<키워드>"` (neols-media/photos, 이전에 받은 사진 재사용)
+     ② 위키미디어 검색 `--list` → `--pick` (받은 사진은 자동으로 보관함에 저장)
+     ③ 제목을 알면 API 없이 `--direct "<File:제목>" <저장.jpg> "<작가>" "<라이선스>" "<태그>"`
+     ④ (허용 목록에 있으면) Openverse
+     인물 소재는 인물 사진 대신 관련 장소·사물 사진(예: 국립서울현충원). 사람이 알아볼 수 있게 나온 사진 제외.
+     끝내 사진을 못 구하면 초안을 만들지 말고 candidate를 selected로 둔 채 note:"사진 찾는 중" 기록 → 다음 회차 재시도.
+     1시간 넘게 못 구하면 SendUserMessage로 알리고 사진 없이 만들지 여부를 물어봄.
+   이미지(그래픽):
    - visual: 직접 만든 그래픽. {"type":"bars","title","data":[[라벨,값]...],"fmt":"{}만","source"} /
      {"type":"timeline","title","data":[[연도,설명]...],"source"} / {"type":"big","title","value","label","sub","source"}.
      숫자는 기사·공식 자료로 확인한 것만, source에 자료 출처.
