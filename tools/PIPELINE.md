@@ -25,14 +25,18 @@
    images/video, publicImages 또는 publicVideo+publicCover, caption, hashtags 최대 5개: #Neols #오늘의뉴스 + 주제 3개).
 6. 해당 candidate → status:"made", draftIds.
 
-## B. 새 후보 5개
-1. meta/request 가 status:"requested" 면 working으로 바꾸고 hint 주제 우선 → 끝나면 done(doneAt, result).
-2. 국내 뉴스 검색 → 기존 candidates와 겹치지 않는 5개, 각각 검증된 THEN 포함.
-3. candidates/c<YYYYMMDD-HHMM>-<n> set: batchId, batchLabel("11/20 07:00"), createdAt, status:"new",
-   category, title, summary(2~3줄 배열), then_label, then, link, sources.
-4. 민감한 정치 뉴스는 사실 확인된 경우만 중립적으로.
+## B. 인기 급상승 소재 감지 (정해진 개수 없음)
+1. meta/request 가 status:"requested" 면 working → hint 주제 우선으로 후보 1~5개 → done(doneAt, result).
+2. 급상승 신호 모으기:
+   - Google 트렌드 한국 급상승 RSS: `curl -s "https://trends.google.com/trending/rss?geo=KR"` (허용 목록에 있을 때만)
+   - WebSearch: "많이 본 뉴스 오늘", "실시간 인기 뉴스", "급상승 검색어" 등으로 포털 랭킹·속보가 실린 결과 확인
+3. meta/seen.topics(최근 감지한 주제 키워드 배열, 최대 80개)와 비교해 **새로 떠오른** 주제만 고름.
+   여러 매체가 동시에 다루거나 랭킹 상위에 새로 올라온 국내 이슈 + 검증 가능한 THEN이 있는 것만.
+4. 해당하는 게 있을 때만 candidates 등록(batchLabel "11/20 08:00 급상승"), meta/seen 갱신.
+   없으면 아무것도 등록하지 않고 알림도 보내지 않음.
+5. 민감한 정치·사건사고(사망, 범죄 피해자 등)는 사실 확인된 경우만 중립적으로, 개인 신상 위주 소재는 제외.
 
 ## C. 마무리
 - meta/status lastRun·nextRun 갱신(ifVersion).
-- 다음 회차 send_later: 07:00~23:00(KST) 30분 뒤, 23:00 이후 다음날 07:00.
-- 새 후보/초안이 생기면 SendUserMessage 한 줄 알림.
+- 다음 회차 send_later: 07:00~23:00(KST) 1시간 뒤(정각), 23:00 이후 다음날 07:00.
+- 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
