@@ -196,8 +196,8 @@ def item_card(d, i, it):
             + f"<div class='cat'>{esc(it['category'])}</div>"
             + f"<div class='flow'><div class='title'>{esc(it['title'])}</div>"
             + f"<ul>{pts}</ul></div>"
-            + f"<div class='then'><div class='lab'><span>THEN</span>{esc(it['then_label'])}</div>"
-              f"<p class='old'>{esc(it['then'])}</p><p class='now'><b>NOW →</b> {esc(it['link'])}</p></div>"
+            + ("" if it.get("_no_then") else f"<div class='then'><div class='lab'><span>THEN</span>{esc(it['then_label'])}</div>"
+              f"<p class='old'>{esc(it['then'])}</p><p class='now'><b>NOW →</b> {esc(it['link'])}</p></div>")
             + f"<div class='foot'><span>출처 · {esc(it['source'])}</span><span>{d['handle']}</span></div>")
     return page(body, css)
 
@@ -207,6 +207,79 @@ LOGO_SVG = """<svg width="%d" height="%d" viewBox="0 0 1080 1080" xmlns="http://
 <polyline points="350,760 350,320 730,760 730,320" fill="none" stroke="#F7F6F2" stroke-width="44" stroke-linejoin="round" stroke-linecap="round"/>
 <circle cx="350" cy="760" r="54" fill="#111" stroke="#F7F6F2" stroke-width="20"/>
 <circle cx="730" cy="320" r="62" fill="#2F5BFF"/></svg>"""
+
+
+def then_card(d, it):
+    """THEN 전용 페이지(소재 1개짜리에서 NOW와 THEN을 나눌 때)."""
+    css = f"""
+    body {{ background:#111 !important; color:#fff; }}
+    .top {{ color:#fff !important; }} .top .date {{ color:#9A9A95 !important; }} .rule {{ background:#fff !important; }}
+    .k {{ position:absolute; top:210px; left:88px; font-size:28px; font-weight:800; letter-spacing:.16em; color:#9DB1FF;
+      border:2px solid #9DB1FF; border-radius:40px; padding:6px 22px; }}
+    .y {{ position:absolute; top:300px; left:84px; right:88px; font-size:150px; font-weight:900; line-height:1; letter-spacing:-0.04em; }}
+    .t {{ position:absolute; top:520px; left:88px; right:88px; font-size:46px; font-weight:700; line-height:1.5; color:#F0F0EC; }}
+    .pts {{ position:absolute; top:800px; left:88px; right:88px; list-style:none; }}
+    .pts li {{ font-size:32px; line-height:1.5; color:#CFCFCA; padding:10px 0; display:flex; }}
+    .pts li .dot {{ background:#9DB1FF; margin-top:16px; flex:none; }}
+    .now {{ position:absolute; left:88px; right:88px; bottom:150px; border-top:1px solid #3A3A3A; padding-top:30px;
+      font-size:34px; line-height:1.5; }} .now b {{ color:#9DB1FF; }}
+    .foot {{ color:#8A8A85 !important; }}
+    """
+    pts = "".join(f"<li><span class='dot'></span>{esc(p)}</li>" for p in it.get("then_points", []))
+    body = (header(d) + "<div class='k'>THEN</div>"
+            + f"<div class='y'>{esc(it['then_label'])}</div><div class='t'>{esc(it['then'])}</div>"
+            + (f"<ul class='pts'>{pts}</ul>" if pts else "")
+            + f"<div class='now'><b>NOW →</b> {esc(it['link'])}</div>"
+            + f"<div class='foot'><span>출처 · {esc(it.get('then_source', it['source']))}</span><span>{d['handle']}</span></div>")
+    return page(body, css)
+
+
+def extra_card(d, it, ex):
+    """추가 설명 페이지: {"kicker","title","lines":[...]}"""
+    css = f"""
+    .k {{ position:absolute; top:200px; left:88px; font-size:26px; font-weight:800; letter-spacing:.14em; color:{ACCENT}; }}
+    .t {{ position:absolute; top:250px; left:86px; right:88px; font-size:64px; font-weight:900; line-height:1.25; }}
+    ol {{ position:absolute; top:520px; left:88px; right:88px; list-style:none; counter-reset:n; }}
+    ol li {{ counter-increment:n; font-size:36px; line-height:1.5; padding:22px 0 22px 80px; position:relative; border-top:1px solid #DEDCD5; }}
+    ol li::before {{ content:counter(n, decimal-leading-zero); position:absolute; left:0; top:22px; font-weight:900; color:{ACCENT}; }}
+    """
+    lis = "".join(f"<li>{esc(x)}</li>" for x in ex["lines"])
+    body = (header(d) + f"<div class='k'>{esc(ex.get('kicker', 'MORE'))}</div><div class='t'>{esc(ex['title'])}</div>"
+            + f"<ol>{lis}</ol>"
+            + f"<div class='foot'><span>출처 · {esc(ex.get('source', it['source']))}</span><span>{d['handle']}</span></div>")
+    return page(body, css)
+
+
+def single_pages(d):
+    """소재 1개 카드뉴스: 최소 4장, 최대 8장.
+    표지 → 그래픽(0~2) → NOW(+THEN 상자) 또는 NOW / THEN 분리 → 추가 설명(0~n) → 홍보"""
+    it = d["items"][0]
+    visuals = it.get("visuals") or ([it["visual"]] if it.get("visual") else [])
+    visuals = visuals[:2]
+    extras = list(it.get("extras", []))
+    split = bool(it.get("split_then") or it.get("then_points"))
+    def count():
+        return 1 + len(visuals) + (2 if split else 1) + len(extras) + 1
+    # 4장보다 적으면 NOW/THEN을 나눠서 채움
+    if count() < 4:
+        split = True
+    # 그래도 적으면 한눈에 정리 페이지 추가
+    if count() < 4:
+        extras.append({"kicker": "SUMMARY", "title": "한눈에 정리", "lines": it["points"]})
+    # 8장보다 많으면 추가 설명부터 줄임
+    while count() > 8 and extras:
+        extras.pop()
+    while count() > 8 and len(visuals) > 0:
+        visuals.pop()
+    pages = [cover_single(d)] + [visual_card(d, dict(it, visual=v)) for v in visuals]
+    if split:
+        it_now = dict(it); it_now["_no_then"] = True
+        pages += [item_card(d, 0, it_now), then_card(d, it)]
+    else:
+        pages.append(item_card(d, 0, it))
+    pages += [extra_card(d, it, ex) for ex in extras]
+    pages.append(outro(d))
+    return pages
 
 
 def outro(d):
@@ -244,9 +317,10 @@ def render(data, out_dir):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     single = len(data["items"]) == 1
-    first = cover_single(data) if single else cover(data)
-    vis = [visual_card(data, data["items"][0])] if single and data["items"][0].get("visual") else []
-    pages = [first] + vis + [item_card(data, i, it) for i, it in enumerate(data["items"])] + [outro(data)]
+    if single:
+        pages = single_pages(data)
+    else:
+        pages = [cover(data)] + [item_card(data, i, it) for i, it in enumerate(data["items"])] + [outro(data)]
     paths = []
     with sync_playwright() as p:
         browser = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox"])

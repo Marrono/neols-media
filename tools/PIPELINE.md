@@ -17,7 +17,12 @@
      thumb.wikimedia.org/wikipedia/commons/thumb/<md5[0]>/<md5[:2]>/<파일명>/1280px-<파일명> (파일명 공백→_, md5는 파일명 기준).
      그래도 안 되면 photo 생략(그래픽만). CC BY는 credit 끝에 "· 잘라서 사용"을 붙임(변경 표시).
    제목이 길면 NOW 카드에서 3줄이 되지 않게 짧게(한 줄 12자 안팎).
-2. 카드: `python3 render.py <json> <out>` → 표지(사진 있으면 상단 사진+하단 출처) / BY THE NUMBERS 그래픽(visual 있을 때) / NOW+THEN / 홍보.
+2. 카드: `python3 render.py <json> <out>` — **전체 최소 4장, 최대 8장** (render.py가 자동으로 맞춤)
+   표지 → 그래픽 0~2장(visuals 배열, 또는 visual 1개) → NOW(+THEN 상자) 또는 NOW / THEN 분리 → 추가 설명 0~n장 → 홍보.
+   - then_points(THEN 보충 2~3줄) 또는 split_then:true 가 있으면 THEN을 검은 배경 전용 페이지로 분리.
+   - extras: [{"kicker":"TIP|MORE|WHY","title","lines":[2~4줄],"source"}] — 사실 확인된 내용만.
+   - 4장 미만이면 NOW/THEN 분리 → 그래도 부족하면 '한눈에 정리' 페이지 자동 추가. 8장 초과면 extras → 그래픽 순으로 줄임.
+   - 보통은 5~6장(그래픽 1~2 + THEN 분리 + 필요하면 추가 설명 1)을 목표로.
 3. 릴스: `python3 reel.py <json> <out>` (무음 1080x1920).
 4. /home/claude/neols-media/<날짜-id>/ 에 card_XX.jpg(quality 92), reel.mp4, reel_cover.jpg → commit(attribution) → `git -c push.negotiate=true push`.
    공개 주소: https://raw.githubusercontent.com/Marrono/neols-media/main/<폴더>/<파일>
