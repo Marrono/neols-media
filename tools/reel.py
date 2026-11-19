@@ -76,9 +76,19 @@ def news(d, i, it, with_then):
     hide = "" if with_then else " hide"
     then = (f"<div class='then{hide}'><div class='lab'><span>THEN</span>{esc(it['then_label'])}</div>"
             f"<p class='old'>{esc(it['then'])}</p><p class='now'><b>NOW →</b> {esc(it['link'])}</p></div>")
-    return page(top(d) + f"<div class='main'><div class='row'><div class='num'>{i+1:02d} <span>/ {n:02d}</span></div>"
+    return page(top(d) + f"<div class='main'><div class='row'><div class='num'>{(f"{i+1:02d} <span>/ {n:02d}</span>") if n > 1 else "NOW"}</div>"
                 f"<div class='cat'>{esc(it['category'])}</div></div><div class='title'>{esc(it['title'])}</div>"
                 f"<ul>{pts}</ul>{then}<div class='src'>출처 · {esc(it['source'])}</div></div>")
+
+
+def photo_scene(d, it):
+    import base64, mimetypes
+    ph = it["photo"]; mt = mimetypes.guess_type(ph["path"])[0] or "image/jpeg"
+    b64 = base64.b64encode(open(ph["path"], "rb").read()).decode()
+    return page(top(d) + f"<div style='position:absolute;top:260px;left:0;right:0;height:900px;background:url(data:{mt};base64,{b64}) center/cover'></div>"
+                f"<div class='main' style='top:1220px'><div class='row'><div class='num'>TODAY</div><div class='cat'>{esc(it['category'])}</div></div>"
+                f"<div class='title' style='font-size:76px;margin-top:30px'>{esc(it['title'])}</div>"
+                f"<div class='src' style='margin-top:auto'>사진 · {esc(ph['credit'])}</div></div>")
 
 
 def outro(d):
@@ -118,6 +128,10 @@ def build(d, out_dir):
     out = Path(out_dir)
     (out / "frames").mkdir(parents=True, exist_ok=True)
     pages = {"intro": intro(d), "outro": outro(d)}
+    single = len(d["items"]) == 1
+    it0 = d["items"][0]
+    if single and it0.get("photo"):
+        pages["photo"] = photo_scene(d, it0)
     for i, it in enumerate(d["items"]):
         pages[f"n{i}a"] = news(d, i, it, False)
         pages[f"n{i}b"] = news(d, i, it, True)
@@ -128,10 +142,23 @@ def build(d, out_dir):
             pg.set_content(h)
             pg.wait_for_timeout(120)
             pg.screenshot(path=str(out / "frames" / f"{k}.png"))
+        if single and it0.get("visual"):
+            import render as R
+            pg.set_viewport_size({"width": 1080, "height": 1350})
+            pg.set_content(R.visual_card(d, it0)); pg.wait_for_timeout(150)
+            pg.screenshot(path=str(out / "frames" / "vis_card.png"))
+            from PIL import Image
+            canvas = Image.new("RGB", (W, H), (247, 246, 242))
+            canvas.paste(Image.open(out / "frames" / "vis_card.png").convert("RGB"), (0, (H - 1350) // 2 - 60))
+            canvas.save(out / "frames" / "vis.png")
         br.close()
     f = out / "frames"
     scenes = [out / "s_intro.mp4"]
     still(f / "intro.png", 2.5, scenes[0], fade_in=True)
+    if (f / "photo.png").exists():
+        sp = out / "s_photo.mp4"; still(f / "photo.png", 3.0, sp, fade_in=True); scenes.append(sp)
+    if (f / "vis.png").exists():
+        sv = out / "s_vis.mp4"; still(f / "vis.png", 3.5, sv, fade_in=True); scenes.append(sv)
     for i in range(len(d["items"])):
         s = out / f"s_n{i}.mp4"
         two_step(f / f"n{i}a.png", f / f"n{i}b.png", 2.8, 4.2, s)
