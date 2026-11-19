@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neols 스튜디오</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F7F6F2; --ink:#111; --mute:#8A8A85; --line:#DEDCD5; --accent:#2F5BFF; --card:#fff; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:'Noto Sans KR', sans-serif; background:var(--bg); color:var(--ink);
+    letter-spacing:-0.02em; word-break:keep-all; -webkit-font-smoothing:antialiased; }
+  .wrap { max-width:560px; margin:0 auto; padding:24px 18px 80px; }
+  header { display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:2px solid var(--ink); padding-bottom:14px; }
+  .logo { font-size:30px; font-weight:900; } .logo i { font-style:normal; color:var(--accent); }
+  .tag { font-size:13px; color:var(--mute); margin-top:2px; }
+  .status { font-size:12px; color:var(--mute); text-align:right; line-height:1.5; }
+  .status b { color:var(--ink); font-weight:700; }
+  nav { display:flex; gap:6px; margin:18px 0 6px; overflow-x:auto; }
+  nav button { flex:none; border:1.5px solid var(--ink); background:transparent; border-radius:30px;
+    padding:7px 14px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; color:var(--ink); }
+  nav button.on { background:var(--ink); color:#fff; }
+  nav button span { font-weight:500; opacity:.65; margin-left:3px; }
+  .empty { text-align:center; color:var(--mute); padding:60px 10px; font-size:15px; line-height:1.7; }
+  .draft { background:var(--card); border-radius:14px; margin-top:16px; overflow:hidden;
+    box-shadow:0 1px 0 var(--line); border:1px solid var(--line); }
+  .dhead { display:flex; justify-content:space-between; align-items:center; padding:14px 16px 10px; }
+  .kind { font-size:12px; font-weight:900; letter-spacing:.1em; padding:4px 10px; border-radius:20px;
+    background:var(--ink); color:#fff; }
+  .kind.reel { background:var(--accent); }
+  .when { font-size:12px; color:var(--mute); }
+  .dtitle { padding:0 16px 12px; font-size:19px; font-weight:900; line-height:1.35; }
+  .media { background:#ECEBE6; position:relative; }
+  .strip { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; }
+  .strip::-webkit-scrollbar { display:none; }
+  .strip img { flex:none; width:100%; scroll-snap-align:center; display:block; aspect-ratio:4/5; object-fit:cover; }
+  .count { position:absolute; right:10px; top:10px; background:rgba(17,17,17,.75); color:#fff;
+    font-size:12px; padding:3px 9px; border-radius:20px; }
+  video { width:100%; display:block; max-height:72vh; background:#000; }
+  .topics { padding:12px 16px 0; font-size:13px; color:#444; line-height:1.7; }
+  .topics div::before { content:'•'; color:var(--accent); margin-right:6px; }
+  details { margin:12px 16px 0; border-top:1px solid var(--line); padding-top:10px; }
+  summary { font-size:13px; font-weight:700; cursor:pointer; color:#333; }
+  .caption { white-space:pre-wrap; font-size:13px; line-height:1.65; color:#333; margin-top:8px;
+    background:var(--bg); padding:12px; border-radius:8px; }
+  .tools { display:flex; gap:8px; padding:12px 16px 0; flex-wrap:wrap; }
+  .ghost { border:1px solid var(--line); background:#fff; border-radius:8px; padding:7px 11px;
+    font:inherit; font-size:13px; cursor:pointer; color:#333; }
+  .ghost:disabled { opacity:.5; }
+  .decide { display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:8px; padding:14px 16px 16px; }
+  .decide button { border:none; border-radius:10px; padding:13px 0; font:inherit; font-size:15px;
+    font-weight:700; cursor:pointer; }
+  .b-post { background:var(--accent); color:#fff; }
+  .b-later { background:#ECEBE6; color:var(--ink); }
+  .b-reject { background:#fff; color:#C23B3B; border:1.5px solid #E7C4C4 !important; }
+  .note { margin:0 16px 14px; }
+  .note textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px;
+    font:inherit; font-size:14px; resize:vertical; min-height:60px; background:var(--bg); }
+  .note .row { display:flex; gap:8px; margin-top:8px; justify-content:flex-end; }
+  .note button { border:none; border-radius:8px; padding:9px 14px; font:inherit; font-size:14px; font-weight:700; cursor:pointer; }
+  .decided { padding:12px 16px 16px; font-size:13px; color:var(--mute); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .decided b { color:var(--ink); }
+  .pill { font-size:12px; font-weight:700; padding:4px 10px; border-radius:20px; }
+  .p-post { background:#E3E9FF; color:var(--accent); } .p-later { background:#ECEBE6; color:#555; }
+  .p-reject { background:#F7E4E4; color:#C23B3B; } .p-done { background:#111; color:#fff; }
+  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111; color:#fff;
+    padding:10px 16px; border-radius:30px; font-size:14px; opacity:0; transition:opacity .2s; pointer-events:none; }
+  .toast.show { opacity:1; }
+  .topbar { display:flex; justify-content:center; margin:-8px 0 14px; }
+  #refreshBtn { border:1px solid var(--line); background:#fff; border-radius:30px; padding:7px 16px;
+    font:inherit; font-size:13px; font-weight:700; color:#333; cursor:pointer; }
+  #refreshBtn .ic { display:inline-block; }
+  #refreshBtn.spin .ic { animation:spin .8s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .findnow { margin-top:16px; }
+  .fn-row { display:flex; gap:8px; }
+  .fn-row input { flex:1; min-width:0; border:1px solid var(--line); border-radius:10px; padding:11px 12px;
+    font:inherit; font-size:14px; background:#fff; }
+  .fn-row button { flex:none; border:none; border-radius:10px; padding:0 16px; font:inherit; font-size:15px; font-weight:700; cursor:pointer; }
+  .fn-row button:disabled { opacity:.5; }
+  .fn-state { font-size:12.5px; color:var(--mute); margin-top:8px; line-height:1.6; }
+  .fn-state b { color:var(--ink); }
+  .fn-state a { color:var(--accent); }
+  .howto { margin-top:28px; font-size:12px; color:var(--mute); line-height:1.8; border-top:1px solid var(--line); padding-top:14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar"><button id="refreshBtn" aria-label="새로고침"><span class="ic">↻</span> 새로고침</button></div>
+  <header>
+    <div><div class="logo">Ne<i>ol</i>s</div><div class="tag">잊혀진 뉴스와 오늘의 뉴스를 잇다</div></div>
+    <div class="status" id="status">불러오는 중…</div>
+  </header>
+  <section class="findnow">
+    <div class="fn-row">
+      <input id="fnHint" placeholder="원하는 주제 (선택, 예: 경제)" maxlength="80">
+      <button id="fnBtn" class="b-post">🔍 지금 찾기</button>
+    </div>
+    <div id="fnState" class="fn-state"></div>
+  </section>
+  <nav id="tabs"></nav>
+  <div id="list"><div class="empty">초안을 불러오는 중이에요…</div></div>
+  <div class="howto">
+    <b style="color:#111">사용법</b><br>
+    🔍 소재 후보: 사람들의 관심이 급상승하는 소재가 생기면 그때 올라와요(네이버 많이 본 뉴스 기준, 24시간 매시 확인). ‘이걸로 만들기’를 누르면 제작 대기로 가고, ‘⚡ 지금 만들기’를 누르거나 70분이 지나면 만들어져요.<br>
+    ✅ 포스팅(카드뉴스): ‘지금 올리기’를 누르면 @neols.news에 바로 게시돼요. 릴스는 직접 올린 뒤 ‘업로드 완료’를 눌러주세요. 직접 올리고 싶으면 파일을 받아 올린 뒤 ‘업로드 완료’를 눌러주세요.<br>
+    ⏰ 다음에: 보관했다가 다음 탐색 때 다시 다듬어 제안해요.<br>
+    ✕ 거절: 이유를 남기면 다음 초안에 반영해요.
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const TABS = [
+  { key:'cands',   label:'소재 후보' },
+  { key:'making',  label:'제작 대기' },
+  { key:'pending', label:'검토 대기' },
+  { key:'later',   label:'다음에' },
+  { key:'reject',  label:'거절' },
+  { key:'done',    label:'업로드 완료' },
+];
+const STATUS_TXT = { post:'포스팅 승인', later:'다음에 보기', reject:'거절', done:'업로드 완료' };
+let current = 'cands', cands = [], drafts = [], db = null, downloads = null, mcp = null, openNote = null, confirmId = null, busyId = null, errMsg = {};
+const WINDSOR = 'Windsor.ai for Social Media', IG_ACCOUNT = '17841480857834317', IG_HANDLE = '@neols.news';
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),1800); }
+function fmt(ts){ if(!ts) return ''; const d=new Date(ts); return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`; }
+
+// '포스팅'(직접 올리기로 표시한 것)은 검토 대기 탭에 함께 보여줘요
+const tabOf = d => { const st = d.status || 'pending'; return st === 'post' ? 'pending' : st; };
+function renderTabs(){
+  $('#tabs').innerHTML = TABS.map(t => {
+    const n = t.key==='cands' ? cands.filter(c => (c.status||'new')==='new').length
+            : t.key==='making' ? cands.filter(c => c.status==='selected').length
+            : drafts.filter(d => tabOf(d) === t.key).length;
+    return `<button class="${t.key===current?'on':''}" data-tab="${t.key}">${t.label}<span>${n}</span></button>`;
+  }).join('');
+}
+
+function draftHTML(d){
+  const st = d.status || 'pending';
+  const media = d.kind === 'reel'
+    ? `<video src="${esc(d.video)}" controls playsinline preload="metadata" ${d.images?.[0]?`poster="${esc(d.images[0])}"`:''}></video>`
+    : `<div class="strip">${(d.images||[]).map(u=>`<img src="${esc(u)}" loading="lazy" alt="">`).join('')}</div>
+       <div class="count">${(d.images||[]).length}장 · 옆으로 넘기기</div>`;
+  const topics = (d.topics||[]).map(t=>`<div>${esc(t)}</div>`).join('');
+  const cap = [d.caption, (d.hashtags||[]).join(' ')].filter(Boolean).join('\n\n');
+  const files = d.kind==='reel' ? [{url:d.video, name:`${d.id}.mp4`}] :
+    (d.images||[]).map((u,i)=>({url:u, name:`${d.id}_${String(i+1).padStart(2,'0')}.png`}));
+  let bottom;
+  const canAuto = mcp && (d.kind==='reel' ? !!d.publicVideo : (d.publicImages||[]).length>=2);
+  if (st === 'pending' && busyId===d.id) {
+    bottom = `<div class="decided"><span><b>인스타그램에 올리는 중…</b> 창을 닫지 말아주세요 (영상은 1분 넘게 걸릴 수 있어요)</span></div>`;
+  } else if (st === 'pending' && confirmId===d.id) {
+    bottom = `<div class="note"><div style="font-size:14px;line-height:1.6;margin-bottom:10px">
+        ${canAuto ? `<b>${IG_HANDLE}</b>에 이 ${d.kind==='reel'?'릴스':'카드뉴스'}를 지금 올릴까요?<br><span style="color:#8A8A85">캡션·해시태그가 함께 올라가요. 올린 뒤에는 인스타 앱에서만 지울 수 있어요.</span>`
+                  : `자동 게시를 쓸 수 없는 초안이에요. 포스팅으로 표시해 두고 파일을 받아 직접 올려주세요.`}</div>
+        <div class="row"><button class="ghost" data-act="cancel">취소</button>
+        ${canAuto ? `<button class="ghost" data-act="manual" data-id="${d.id}">직접 올릴게요</button>
+                     <button class="b-post" data-act="publish" data-id="${d.id}">지금 올리기</button>`
+                  : `<button class="b-post" data-act="manual" data-id="${d.id}">포스팅으로 표시</button>`}</div></div>`;
+  } else if (st === 'pending') {
+    bottom = openNote && openNote.id===d.id
+      ? `<div class="note"><textarea id="noteText" placeholder="${openNote.status==='reject'?'거절 이유 (예: 너무 정치적이에요, THEN이 약해요)':'메모 (예: 주말에 올릴래요)'}"></textarea>
+           <div class="row"><button class="ghost" data-act="cancel">취소</button>
+           <button class="${openNote.status==='reject'?'b-reject':'b-later'}" data-act="confirm" data-id="${d.id}">${openNote.status==='reject'?'거절하기':'다음에 보기'}</button></div></div>`
+      : `<div class="decide">
+           ${d.kind==='reel'
+             ? `<button class="b-post" data-act="done" data-id="${d.id}">✅ 업로드 완료</button>`
+             : `<button class="b-post" data-act="post" data-id="${d.id}">✅ 포스팅</button>`}
+           <button class="b-later" data-act="later" data-id="${d.id}">⏰ 다음에</button>
+           <button class="b-reject" data-act="reject" data-id="${d.id}">✕ 거절</button></div>`;
+  } else {
+    const extra = st==='done' ? '' : st==='post' ? `<button class="ghost" data-act="done" data-id="${d.id}">업로드 완료</button>` :
+                  `<button class="ghost" data-act="undo" data-id="${d.id}">되돌리기</button>`;
+    bottom = `<div class="decided"><span><span class="pill p-${st}">${STATUS_TXT[st]}</span>
+      ${d.note?` <b>“${esc(d.note)}”</b>`:''} <span>${fmt(d.decidedAt)}</span>${d.igPostId?' · <b>인스타 게시됨</b>':''}</span>${extra}</div>`;
+  }
+  return `<article class="draft">
+    <div class="dhead"><span class="kind ${d.kind==='reel'?'reel':''}">${d.kind==='reel'?'REELS':'CARD NEWS'}</span>
+      <span class="when">${esc(d.dateLabel||'')} · ${fmt(d.createdAt)}</span></div>
+    <div class="dtitle">${esc(d.title)}</div>
+    ${d.photoPending ? `<div style="margin:0 16px 12px;background:#FFF4E5;border:1px solid #F3C98B;color:#8A4B00;border-radius:10px;padding:10px 12px;font-size:13px;line-height:1.55">
+       ⚠️ <b>표지 사진 없음</b> · 문제없는 사진을 찾는 중이에요. 구하면 자동으로 다시 만들어 바꿔둘게요.</div>` : ''}
+    <div class="media">${media}</div>
+    ${topics?`<div class="topics">${topics}</div>`:''}
+    ${cap?`<details><summary>인스타 캡션 · 해시태그</summary><div class="caption">${esc(cap)}</div></details>`:''}
+    <div class="tools">
+      ${cap?`<button class="ghost" data-act="copy" data-id="${d.id}">캡션 복사</button>`:''}
+      ${downloads && files.length ? `<button class="ghost" data-act="dl" data-id="${d.id}">파일 받기 (${files.length})</button>`:''}
+    </div>
+    ${errMsg[d.id]?`<div style="margin:0 16px 14px;font-size:13px;color:#C23B3B;line-height:1.6">${esc(errMsg[d.id])}</div>`:''}
+    ${bottom}
+  </article>`;
+}
+
+function candHTML(c){
+  const st = c.status || 'new';
+  const src = (c.sources||[]).join(' · ');
+  let bottom;
+  if (st === 'new') bottom = `<div class="decide" style="grid-template-columns:2fr 1fr">
+      <button class="b-post" data-act="pick" data-id="${c.id}">이걸로 만들기</button>
+      <button class="b-later" data-act="skip" data-id="${c.id}">패스</button></div>`;
+  else if (st === 'selected') bottom = `<div class="decide" style="grid-template-columns:2fr 1fr">
+      <a class="b-post" href="${CHAT_URL}" target="_blank" rel="noopener" data-act="makenow" data-id="${c.id}"
+         style="display:flex;align-items:center;justify-content:center;border-radius:10px;padding:13px 0;font-size:15px;font-weight:700;text-decoration:none">⚡ 지금 만들기</a>
+      <button class="b-later" data-act="unpick" data-id="${c.id}">취소</button></div>
+      <div style="padding:0 16px 14px;font-size:12.5px;color:var(--mute);line-height:1.6">그냥 두면 <b style="color:#111">${fmt((c.decidedAt||Date.now()) + 70*60e3)}</b> 무렵 자동으로 만들어져요 (제작 대기 70분 후).</div>`;
+  else if (st === 'made') bottom = `<div class="decided"><span><span class="pill p-done">초안 완성</span> 검토 대기 탭에서 확인하세요</span></div>`;
+  else bottom = `<div class="decided"><span><span class="pill p-later">패스함</span></span>
+      <button class="ghost" data-act="unskip" data-id="${c.id}">되돌리기</button></div>`;
+  return `<article class="draft">
+    <div class="dhead"><span class="kind">${esc(c.category||'뉴스')}</span><span class="when">${esc(c.batchLabel||'')} · ${fmt(c.createdAt)}</span></div>
+    <div class="dtitle">${esc(c.title)}</div>
+    ${c.summary?`<div class="topics" style="padding-top:0">${(Array.isArray(c.summary)?c.summary:[c.summary]).map(t=>`<div>${esc(t)}</div>`).join('')}</div>`:''}
+    ${c.then?`<div style="margin:12px 16px 0;background:#111;color:#fff;border-radius:10px;padding:14px 16px">
+       <div style="font-size:12px;font-weight:800;letter-spacing:.12em;color:#9DB1FF">THEN · ${esc(c.then_label||'')}</div>
+       <div style="font-size:14px;line-height:1.6;margin-top:6px;color:#E8E8E4">${esc(c.then)}</div>
+       ${c.link?`<div style="font-size:13.5px;line-height:1.55;margin-top:8px;padding-top:8px;border-top:1px solid #333"><b style="color:#9DB1FF">NOW →</b> ${esc(c.link)}</div>`:''}</div>`:''}
+    ${src?`<div style="padding:10px 16px 0;font-size:12px;color:var(--mute)">출처 · ${esc(src)}</div>`:''}
+    ${bottom}
+  </article>`;
+}
+
+async function setCand(id, status){
+  if (!db) return;
+  const patch = { status, decidedAt: status==='new' ? null : Date.now() };
+  try { await db.doc('candidates/'+id).update(patch);
+        cands = cands.map(x => x.id===id ? { ...x, ...patch } : x); render();
+        toast(status==='selected' ? '제작 대기에 넣었어요 · 70분 뒤 자동으로 만들어져요' : status==='skipped' ? '패스했어요' : '되돌렸어요'); }
+  catch(e){ toast('저장하지 못했어요. 다시 눌러주세요.'); }
+}
+
+function render(){
+  if (current === 'cands' || current === 'making') {
+    renderTabs();
+    const order = { selected:0, new:1, made:2, skipped:3 };
+    const want = current === 'making'
+      ? (c => c.status === 'selected')
+      : (c => (c.status||'new') === 'new' || (c.status === 'skipped' && Date.now()-(c.decidedAt||0) < 6*3600e3));
+    const list = cands.filter(want)
+      .sort((a,b)=> (order[a.status]??1)-(order[b.status]??1) || (b.createdAt||0)-(a.createdAt||0)).slice(0, 30);
+    const banner = (current === 'making' && list.length)
+      ? `<div style="margin-top:16px;background:#E3E9FF;border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:#1d2b66">
+           <b>${list.length}개</b>가 제작 대기 중이에요. 제작 대기로 넘어오고 70분이 지나면 자동으로 만들어져요.<br>
+           바로 만들려면 ‘⚡ 지금 만들기’를 눌러주세요.</div>` : '';
+    $('#list').innerHTML = list.length ? banner + list.map(candHTML).join('') :
+      (current === 'making' ? '<div class="empty">제작 대기 중인 소재가 없어요.<br>‘소재 후보’에서 ‘이걸로 만들기’를 누르면 여기로 와요.</div>'
+                            : '<div class="empty">아직 소재 후보가 없어요.<br>관심이 급상승하는 소재가 생기거나 ‘지금 찾기’를 누르면 올라와요.</div>');
+    return;
+  }
+  renderTabs();
+  const list = drafts.filter(d => tabOf(d) === current)
+    .sort((a,b)=> (b.createdAt||0)-(a.createdAt||0));
+  $('#list').innerHTML = list.length ? list.map(draftHTML).join('') :
+    `<div class="empty">${current==='pending' ? '지금은 검토할 초안이 없어요.<br>새 소재를 찾으면 여기에 올라와요.' : '아직 비어 있어요.'}</div>`;
+}
+
+async function setStatus(id, status, note){
+  const d = drafts.find(x=>x.id===id); if(!d || !db) return;
+  const patch = { status, decidedAt: Date.now() };
+  if (note !== undefined) patch.note = note;
+  if (status === 'pending') { patch.note = ''; patch.decidedAt = null; }
+  try { await db.doc('drafts/'+id).update(patch);
+    drafts = drafts.map(x => x.id===id ? { ...x, ...patch } : x); render(); toast(status==='pending'?'되돌렸어요':STATUS_TXT[status]+'(으)로 표시했어요'); }
+  catch(e){ toast('저장하지 못했어요. 다시 눌러주세요.'); }
+}
+
+async function publish(d){
+  busyId = d.id; confirmId = null; delete errMsg[d.id]; render();
+  const caption = [d.caption, (d.hashtags||[]).join(' ')].filter(Boolean).join('\n\n').slice(0, 2200);
+  const input = d.kind === 'reel'
+    ? { connector:'instagram', action:'create_video_post', account:IG_ACCOUNT,
+        params:{ video_url:d.publicVideo, caption, share_to_feed:true, ...(d.publicCover?{cover_url:d.publicCover}:{}) } }
+    : { connector:'instagram', action:'create_carousel_post', account:IG_ACCOUNT,
+        params:{ image_urls:d.publicImages.slice(0,10), caption } };
+  try {
+    const r = await mcp.callTool(WINDSOR, 'execute_action', input, { cache:false });
+    const p = r.payload; const pid = (p && (p.id || p.media_id || p.post_id)) || 'ok';
+    busyId = null;
+    await db.doc('drafts/'+d.id).update({ status:'done', decidedAt:Date.now(), igPostId:String(pid), publishedAt:Date.now() });
+    drafts = drafts.map(x => x.id===d.id ? { ...x, status:'done', igPostId:String(pid), decidedAt:Date.now() } : x);
+    render(); toast('인스타그램에 올렸어요 🎉');
+  } catch (e) {
+    busyId = null;
+    const c = e && e.code;
+    if (c === 'needs_reauth') errMsg[d.id] = 'Windsor 연결이 만료됐어요. claude.ai 설정 → 커넥터에서 다시 연결해주세요.';
+    else if (c === 'server_not_connected' || c === 'selection_required') errMsg[d.id] = 'Windsor.ai for Social Media 커넥터를 찾지 못했어요. claude.ai 설정 → 커넥터에서 연결 상태를 확인해주세요.';
+    else if (c === 'approval_required' || c === 'not_in_manifest') errMsg[d.id] = '이 사이트가 Windsor를 쓰도록 허용해야 해요. 다시 “지금 올리기”를 누르고 허용을 선택해주세요.';
+    else if (c === 'tool_error') errMsg[d.id] = '인스타그램이 게시를 거절했어요: ' + String(e.message||'').slice(0,240);
+    else if (c === 'server_unavailable' || c === 'upstream_error' || c === 'cancelled') {
+      errMsg[d.id] = '응답이 끊겨서 올라갔는지 확실하지 않아요. 인스타 앱에서 먼저 확인하고, 안 올라갔을 때만 다시 눌러주세요.';
+    } else errMsg[d.id] = '게시하지 못했어요 (' + (c||'알 수 없는 오류') + '). 파일을 받아 직접 올려주세요.';
+    render();
+  }
+}
+
+const CHAT_URL = 'https://claude.ai/code/session_01Q7LSbuGCgdyERFpLoSa6gg';
+let reqState = null, nextRun = null;
+function renderReq(){
+  const el = $('#fnState'), btn = $('#fnBtn');
+  if (!db) { btn.disabled = true; el.textContent = ''; return; }
+  if (reqState && reqState.status === 'requested') {
+    btn.disabled = true;
+    el.innerHTML = `<b>요청됨</b> (${fmt(reqState.requestedAt)}${reqState.hint?` · “${esc(reqState.hint)}”`:''}) · 다음 탐색${nextRun?` <b>${fmt(nextRun)}</b>`:''}에 가장 먼저 처리해요.<br>더 빨리 원하면 <a href="${CHAT_URL}" target="_blank" rel="noopener">Claude 대화</a>에 “지금 찾아줘”라고 보내주세요.`;
+  } else if (reqState && reqState.status === 'working') {
+    btn.disabled = true; el.innerHTML = '<b>찾는 중이에요…</b> 새 후보가 곧 ‘소재 후보’ 탭에 올라와요.';
+  } else {
+    btn.disabled = false;
+    el.innerHTML = reqState && reqState.status === 'done' ? `마지막 요청 처리 완료 · ${fmt(reqState.doneAt)}${reqState.result?` · ${esc(reqState.result)}`:''}` : '원하는 주제가 있으면 바로 소재를 찾아달라고 요청할 수 있어요.';
+  }
+}
+async function requestNow(){
+  if (!db) return;
+  const hint = $('#fnHint').value.trim();
+  $('#fnBtn').disabled = true;
+  try { await db.doc('meta/request').set({ status:'requested', requestedAt:Date.now(), hint });
+        $('#fnHint').value=''; toast('요청했어요'); }
+  catch(e){ toast('요청하지 못했어요. 다시 눌러주세요.'); $('#fnBtn').disabled = false; }
+}
+$('#fnBtn').addEventListener('click', requestNow);
+
+// 새로고침: 서버에서 최신 데이터를 다시 읽어와요 (실시간 반영이 늦을 때용)
+async function refreshAll(){
+  const btn = $('#refreshBtn');
+  if (!db || btn.classList.contains('spin')) return;
+  btn.classList.add('spin');
+  try {
+    const [ds, cs, st, rq] = await Promise.all([
+      db.collection('drafts').get(), db.collection('candidates').get(),
+      db.doc('meta/status').get(), db.doc('meta/request').get()]);
+    drafts = ds.docs.map(x => ({ id:x.id, ...x.data() }));
+    cands = cs.docs.map(x => ({ id:x.id, ...x.data() }));
+    const m = st.exists ? st.data() : null;
+    nextRun = m && m.nextRun;
+    $('#status').innerHTML = m ? `마지막 확인 <b>${fmt(m.lastRun)}</b><br>다음 확인 <b>${fmt(m.nextRun)}</b>` : '자동 탐색 준비 중';
+    reqState = rq.exists ? rq.data() : null;
+    renderReq(); render(); toast('최신 상태로 불러왔어요');
+  } catch(e) { toast('불러오지 못했어요. 잠시 후 다시 눌러주세요.'); }
+  finally { btn.classList.remove('spin'); }
+}
+$('#refreshBtn').addEventListener('click', refreshAll);
+
+async function saveFiles(d){
+  const files = d.kind==='reel' ? [{url:d.video, name:`${d.id}.mp4`}] :
+    (d.images||[]).map((u,i)=>({url:u, name:`${d.id}_${String(i+1).padStart(2,'0')}.png`}));
+  for (const f of files) {
+    try {
+      const blob = await (await fetch(f.url)).blob();
+      await downloads.save({ filename:f.name, data:blob });
+    } catch(e) { toast('저장을 취소했거나 실패했어요'); return; }
+  }
+  toast('파일을 저장했어요');
+}
+
+document.addEventListener('click', async e => {
+  const b = e.target.closest('button, a[data-act]'); if(!b) return;
+  if (b.dataset.tab) { current = b.dataset.tab; openNote=null; render(); return; }
+  const id = b.dataset.id, act = b.dataset.act, d = drafts.find(x=>x.id===id);
+  if (act==='pick') { await setCand(id,'selected'); return; }
+  if (act==='skip') { await setCand(id,'skipped'); return; }
+  if (act==='unpick' || act==='unskip') { await setCand(id,'new'); return; }
+  if (act==='makenow') {
+    const c = cands.find(x => x.id === id);
+    const msg = `만들어줘: ${c ? c.title : ''}`;
+    try { await navigator.clipboard.writeText(msg); toast('“만들어줘” 메시지를 복사했어요. 대화창에 붙여넣어 보내주세요'); }
+    catch { toast('대화창에 “만들어줘”라고 보내주세요'); }
+    return;  // 링크(<a>)가 대화를 열어요
+  }
+  if (act==='post') { confirmId = id; openNote = null; render(); }
+  else if (act==='publish' && d) await publish(d);
+  else if (act==='manual') { confirmId = null; await setStatus(id,'post'); }
+  else if (act==='later' || act==='reject') { openNote={id,status:act}; render(); $('#noteText')?.focus(); }
+  else if (act==='cancel') { openNote=null; confirmId=null; render(); }
+  else if (act==='confirm') { const n=$('#noteText').value.trim(); const s=openNote.status; openNote=null; await setStatus(id,s,n); }
+  else if (act==='done') await setStatus(id,'done');
+  else if (act==='undo') await setStatus(id,'pending');
+  else if (act==='copy' && d) {
+    const cap=[d.caption,(d.hashtags||[]).join(' ')].filter(Boolean).join('\n\n');
+    try { await navigator.clipboard.writeText(cap); toast('캡션을 복사했어요'); } catch { toast('복사가 막혔어요. 캡션을 길게 눌러 복사해주세요'); }
+  }
+  else if (act==='dl' && d) { b.disabled=true; await saveFiles(d); b.disabled=false; }
+});
+
+renderTabs();
+(async () => {
+  const timer = setTimeout(()=>{ if(!db) $('#list').innerHTML='<div class="empty">데이터에 연결하지 못했어요.<br>로그인한 상태로 다시 열어주세요.</div>'; }, 10000);
+  db = await claude.use('db');
+  downloads = await claude.use('downloads');
+  claude.use('mcp').then(m => { mcp = m; render(); });
+  if (!db) { clearTimeout(timer); $('#list').innerHTML='<div class="empty">로그인하면 초안을 볼 수 있어요.</div>'; $('#status').textContent=''; return; }
+  db.collection('drafts').onSnapshot(snap => {
+    clearTimeout(timer);
+    drafts = snap.docs.map(x => ({ id:x.id, ...x.data() }));
+    render();
+  }, () => { clearTimeout(timer); $('#list').innerHTML='<div class="empty">초안을 불러오지 못했어요.</div>'; });
+  db.doc('meta/status').onSnapshot(s => {
+    const m = s.exists ? s.data() : null;
+    nextRun = m && m.nextRun; renderReq();
+    $('#status').innerHTML = m ? `마지막 확인 <b>${fmt(m.lastRun)}</b><br>다음 확인 <b>${fmt(m.nextRun)}</b>` : '자동 탐색 준비 중';
+  }, ()=>{});
+  db.collection('candidates').onSnapshot(snap => {
+    cands = snap.docs.map(x => ({ id:x.id, ...x.data() })); render();
+  }, ()=>{});
+  db.doc('meta/request').onSnapshot(s => { reqState = s.exists ? s.data() : null; renderReq(); }, ()=>{});
+  // 활동 기록: 사이트를 보고 있거나 누르면 알림을 켜두는 기준이 돼요
+  let lastPing = 0;
+  const ping = () => { if (document.visibilityState !== 'visible' || Date.now() - lastPing < 60000) return;
+    lastPing = Date.now(); db.doc('meta/siteSeen').set({ at: lastPing }).catch(()=>{}); };
+  ping();
+  document.addEventListener('visibilitychange', ping);
+  ['click','touchstart','scroll'].forEach(ev => document.addEventListener(ev, ping, { passive:true }));
+})();
+</script>
+</body>
+</html>
