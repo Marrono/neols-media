@@ -1,0 +1,79 @@
+{
+ "date": "2026.11.20",
+ "weekday": "금",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "category": "생활",
+   "title": "편의점이 면세점?\n외국인 ‘환급 쇼핑’ 급증",
+   "points": [
+    "CU에선 커피캔디, GS25에선 그릭요거트가 외국인 인기 품목",
+    "1만5천 원 이상 사면 부가세를 바로 돌려받는 택스리펀드 이용이 늘었어요",
+    "올해 방한 외국인은 역대 최대 2,000만 명을 넘을 전망이에요"
+   ],
+   "then_label": "2024",
+   "then": "CU 외국인 매출 1위가 바나나맛 우유에서 두바이 초콜릿으로 바뀌었고, 택스리펀드 이용은 한 해 만에 16배로 늘었어요.",
+   "link": "여행 기념품 대신 ‘한국의 일상’을 사 가는 여행이 표준이 됐어요.",
+   "source": "서울경제 · 시사저널e · SBS Biz",
+   "then_source": "바이라인네트워크 · SBS Biz(2025.1)",
+   "photo": {
+    "path": "/home/claude/cardnews/cvs_cover.jpg",
+    "credit": "lazy fri13th / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+   },
+   "visual": {
+    "type": "big",
+    "title": "CU 택스리펀드 이용 건수\n(2024년, 전년 대비)",
+    "value": "16배",
+    "label": "한 해 1만5천 건 돌파, 이용객 국적 75개국",
+    "sub": "GS25 외국인 결제 매출도 올 상반기 60.2% 늘었어요",
+    "source": "바이라인네트워크 · 시사저널e"
+   },
+   "extras": [],
+   "template": "collage",
+   "photos": [
+    {
+     "path": "/home/claude/cardnews/cvs_cover.jpg",
+     "credit": "lazy fri13th / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+    },
+    {
+     "path": "/home/claude/cardnews/ph/cvs2.jpg",
+     "credit": "Startandstar / Wikimedia Commons / CC0"
+    }
+   ],
+   "reel": {
+    "hook": "편의점이\n면세점이 됐다?",
+    "stat": {
+     "label": "CU 택스리펀드(2024, 전년 대비)",
+     "value": "16배"
+    },
+    "chips": [
+     [
+      "up",
+      "GS25 외국인 매출 +60.2%"
+     ]
+    ],
+    "then_head": "바나나우유 → 두바이 초콜릿",
+    "then_sub": "2024년 CU 외국인 매출 1위가 바뀌었어요"
+   },
+   "explain": {
+    "title": "택스리펀드,\n어떻게 받는 거야?",
+    "lines": [
+     "외국인이 1만5천 원 이상 과세 상품을 사면 대상",
+     "계산할 때 부가세를 바로 돌려받는 즉시 환급",
+     "보통 6~8% 할인된 가격에 사는 효과"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "여담",
+     "title": "외국인 장바구니\n변천사",
+     "lines": [
+      "바나나맛 우유는 오랫동안 외국인 인기 1위였어요",
+      "2024년엔 두바이 초콜릿, 올해는 커피캔디·그릭요거트가 떠올랐어요"
+     ]
+    }
+   ]
+  }
+ ]
+}

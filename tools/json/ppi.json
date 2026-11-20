@@ -1,0 +1,97 @@
+{
+ "date": "2026.11.20",
+ "weekday": "금",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "category": "경제",
+   "title": "채솟값 뚝, 기름값 쑥\n10월 생산자물가 0.1%↓",
+   "points": [
+    "농축산물 가격이 크게 내리며 생산자물가가 0.1% 떨어졌어요",
+    "반면 공산품 가격은 올랐어요",
+    "소비자물가도 채소 -11.2%, 석유류 +14.9%로 엇갈렸어요"
+   ],
+   "then_label": "2024.10",
+   "then": "배추(-46%)·시금치(-62%) 값이 폭락하며 농산물 생산자물가가 2년 만에 가장 크게 떨어졌어요.",
+   "link": "가을마다 채소값이 물가를 누르지만, 올해는 기름값이 반대로 끌어올리고 있어요.",
+   "source": "뉴스핌 · 뉴스토마토 · 이투데이(2024)",
+   "visual": {
+    "type": "timeline",
+    "title": "올해 생산자물가\n한 달 사이 변화",
+    "data": [
+     [
+      "7월 -0.4%",
+      "하락"
+     ],
+     [
+      "8월 +0.2%",
+      "폭염에 농축산물 가격 상승"
+     ],
+     [
+      "9월 +0.2%",
+      "배추 40% 넘게 올라"
+     ],
+     [
+      "10월 -0.1%",
+      "농축산물 급락, 공산품은 상승"
+     ]
+    ],
+    "source": "한국은행 발표(MTN · SBS Biz · 뉴스핌 보도)"
+   },
+   "photo": {
+    "path": "/home/claude/cardnews/ppi_cover.jpg",
+    "credit": "Bayartai / Wikimedia Commons / CC0"
+   },
+   "photos": [
+    {
+     "path": "/home/claude/cardnews/ppi_cover.jpg",
+     "credit": "Bayartai / Wikimedia Commons / CC0"
+    },
+    {
+     "path": "/home/claude/cardnews/bok.jpg",
+     "credit": "Wikimedia Commons / Public domain"
+    }
+   ],
+   "reel": {
+    "hook": "배추는 반값,\n기름은 껑충?",
+    "stat": {
+     "label": "10월 생산자물가",
+     "value": "−0.1%"
+    },
+    "chips": [
+     [
+      "down",
+      "채소 −11.2%"
+     ],
+     [
+      "up",
+      "석유류 +14.9%"
+     ]
+    ],
+    "then_head": "배추 −46% · 시금치 −62%",
+    "then_sub": "2024년 10월, 농산물 생산자물가\n2년 만에 가장 크게 떨어졌어요"
+   },
+   "split_then": true,
+   "template": "cine",
+   "explain": {
+    "title": "생산자물가,\n장바구니랑 무슨 상관?",
+    "lines": [
+     "공장·농장이 물건을 넘길 때의 가격이에요",
+     "보통 시차를 두고 소비자물가에 반영돼요",
+     "그래서 ‘앞으로의 물가’를 미리 보는 지표로 불려요"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "여담",
+     "title": "배추값은 왜\n해마다 출렁일까?",
+     "lines": [
+      "가을배추는 날씨에 따라 수확량이 크게 달라져요",
+      "2024년엔 폭염에 값이 뛰었다가, 출하가 늘자 10월에 급락했어요"
+     ]
+    }
+   ]
+  }
+ ]
+}

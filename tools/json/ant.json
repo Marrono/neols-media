@@ -1,0 +1,99 @@
+{
+ "date": "2026.11.20",
+ "weekday": "금",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "template": "split",
+   "category": "경제·AI",
+   "title": "앤트로픽 상장 첫날 17%↑\n역대 최대 IPO",
+   "points": [
+    "11월 19일(현지시간) 나스닥 상장, 공모가 83달러 → 첫날 종가 97.17달러(+17.1%)",
+    "IPO와 동시 사모를 합친 조달액 1073억 달러, 스페이스X를 넘어 역대 최대",
+    "공동창업자 7명 지분 평가액 각 230억 달러 이상(포브스 추산)"
+   ],
+   "then_label": "2012.05",
+   "then": "페이스북이 공모가 38달러로 상장해 약 160억 달러를 모았지만, 3개월 만에 주가가 절반 넘게 떨어졌어요.",
+   "then_points": [
+    "이후 모바일 광고 성공으로 장기 상승세",
+    "‘첫날 흥행 = 성공’은 아니라는 교훈"
+   ],
+   "link": "첫날의 환호보다 실제 매출과 비용 구조가 앞으로의 주가를 결정해요.",
+   "source": "연합뉴스 · 세계일보 · 이투데이 · 서울경제TV",
+   "then_source": "블록미디어(WSJ 인용)",
+   "visual": {
+    "type": "bars",
+    "title": "앤트로픽 상장 첫날 주가",
+    "data": [
+     [
+      "공모가",
+      83
+     ],
+     [
+      "시초가",
+      111.5
+     ],
+     [
+      "종가",
+      97.17
+     ]
+    ],
+    "fmt": "{}달러",
+    "highlight": 2,
+    "source": "세계일보 · ㅍㅍㅅㅅ 보도"
+   },
+   "reel": {
+    "hook": "첫날 17% 급등,\n역대 최대 IPO",
+    "stat": {
+     "label": "앤트로픽 상장 첫날 종가",
+     "value": "97.17달러"
+    },
+    "chips": [
+     [
+      "up",
+      "시초가 +34.3%"
+     ],
+     [
+      "up",
+      "종가 +17.1%"
+     ]
+    ],
+    "then_head": "페이스북, 3개월 만에 반토막",
+    "then_sub": "2012년 5월 공모가 38달러로 상장\n이후 모바일 광고로 반등했어요"
+   },
+   "photos": [
+    {
+     "path": "/home/claude/cardnews/ph/ant_nasdaq.jpg",
+     "credit": "Nielsoncaetanosalmeron / Wikimedia Commons / CC BY 4.0 · 잘라서 사용"
+    },
+    {
+     "path": "/home/claude/cardnews/ph/wallst.jpg",
+     "credit": "Benoît Prieur / Wikimedia Commons / CC0"
+    }
+   ],
+   "photo": {
+    "path": "/home/claude/cardnews/ph/ant_nasdaq.jpg",
+    "credit": "Nielsoncaetanosalmeron / Wikimedia Commons / CC BY 4.0 · 잘라서 사용"
+   },
+   "explain": {
+    "title": "IPO,\n쉽게 말하면?",
+    "lines": [
+     "회사가 주식을 처음 일반에 팔고 증시에 올리는 것(기업공개)",
+     "공모가는 상장 전 파는 가격, 시초가는 첫 거래 가격이에요",
+     "앤트로픽은 공모가 83달러 → 첫날 97.17달러로 마감"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "여담",
+     "title": "종목 코드는\n‘ANT’",
+     "lines": [
+      "앤트로픽은 나스닥에서 ‘ANT’라는 코드로 거래돼요",
+      "공동창업자들은 지분의 80%를 기부하기로 약정했어요"
+     ]
+    }
+   ]
+  }
+ ]
+}
