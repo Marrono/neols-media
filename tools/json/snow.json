@@ -1,0 +1,78 @@
+{
+ "date": "2026.11.20",
+ "weekday": "금",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "category": "생활·날씨",
+   "template": "cine",
+   "title": "전북·제주 대설,\n겨울이 왔다",
+   "points": [
+    "전북 5개 시군에 대설특보가 내려졌어요",
+    "김제엔 14.3㎝가 쌓였고, 새벽까지 2~7㎝가 더 올 수 있어요",
+    "제주 산지에도 눈, 내일 아침은 영하권이에요"
+   ],
+   "then_label": "2024.11",
+   "then": "서울 첫눈이 폭설로 바뀌어 수도권에 20㎝ 넘게 쌓였어요.",
+   "then_points": [
+    "11월 눈으로는 서울 관측 117년 만에 가장 많았어요",
+    "출근길이 마비되고 지붕·비닐하우스가 무너지는 피해가 이어졌어요"
+   ],
+   "link": "늦게 온 첫눈이 폭설이 됐던 그해처럼, 첫 큰눈엔 빙판길부터 조심해야 해요.",
+   "source": "KBS · 전주MBC · JIBS",
+   "then_source": "기상청 · 연합뉴스(2024)",
+   "photos": [
+    {
+     "path": "/home/claude/cardnews/ph/snow_kr.jpg",
+     "credit": "Katsujiro Maekawa / Wikimedia Commons / CC0"
+    },
+    {
+     "path": "/home/claude/cardnews/ph/snow_modis.jpg",
+     "credit": "NASA GSFC MODIS / Wikimedia Commons / Public domain"
+    }
+   ],
+   "reel": {
+    "hook": "올겨울 첫 대설,\n전북에 14㎝",
+    "stat": {
+     "label": "김제 적설(20일)",
+     "value": "14.3㎝"
+    },
+    "chips": [
+     [
+      "up",
+      "대설특보 5개 시군"
+     ],
+     [
+      "down",
+      "내일 아침 영하권"
+     ]
+    ],
+    "then_head": "2024년, 117년 만의 11월 폭설",
+    "then_sub": "서울 첫눈이 20㎝ 넘게 쌓이며\n출근길이 멈췄어요"
+   },
+   "explain": {
+    "title": "대설주의보와 경보,\n뭐가 달라요?",
+    "lines": [
+     "대설주의보는 24시간 새로 쌓일 눈이 5㎝ 이상 예상될 때 내려요",
+     "대설경보는 20㎝ 이상(산지는 30㎝) 예상될 때예요",
+     "경보가 나오면 외출과 운전을 줄이는 게 좋아요"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "여담",
+     "title": "위성으로 본\n2024년 폭설",
+     "lines": [
+      "폭설 며칠 뒤 NASA 위성 사진에 한반도 중부가 눈으로 덮인 모습이 찍혔어요",
+      "사진 속 하늘색이 눈, 흰색은 구름이에요"
+     ]
+    }
+   ],
+   "photo": {
+    "path": "/home/claude/cardnews/ph/snow_kr.jpg",
+    "credit": "Katsujiro Maekawa / Wikimedia Commons / CC0"
+   }
+  }
+ ]
+}
