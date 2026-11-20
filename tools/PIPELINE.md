@@ -66,7 +66,12 @@
    images/video, publicImages 또는 publicVideo+publicCover, caption, hashtags 최대 5개: #Neols #오늘의뉴스 + 주제 3개).
 6. 해당 candidate → status:"made", draftIds.
 
-## B. 인기 급상승 소재 감지 (정해진 개수 없음, 정각 회차에만)
+## B. 인기 급상승 소재 감지 (2026-11-21 개편: **5분마다 매 회차**)
+- 탐색 묶음: meta/searchRound {n, found, pool:[{title, summary, then, then_label, category, sources, score, reason}], startedAt}.
+  매 회차 n+1. 쓸 만한 새 소재를 후보로 올리면 found+1. 못 올린 것 중 그나마 나은 소재(검증 가능한 THEN이 있는 국내 이슈)는 pool에 점수와 함께 저장.
+  **n이 10이 되면**: found가 2개 이하면 pool에서 점수 높은 순으로 **2개**를 후보로 등록(batchLabel "… 그나마 괜찮은 소재"), 그다음 n·found·pool 초기화.
+  found가 3개 이상이면 그냥 초기화.
+- **사회 분야는 정치색이 덜한 소재 우선**(2026-11-21 사용자 결정): 정치권 공방·탄핵·특검·정당 이슈는 웬만하면 제외, 생활·안전·교육·제도 중심으로. 정치 계정이 아님.
 1. meta/request 가 status:"requested" 면 working → hint 주제 우선으로 후보 1~5개 → done(doneAt, result).
 2. 급상승 신호 모으기 (**네이버 우선**):
    - 1순위 네이버 뉴스 '많이 본 뉴스' 랭킹: `python3 naver_rank.py` (news.naver.com 허용 시).
@@ -81,12 +86,24 @@
    (자살·개인 신상 위주 등 다루기 부적절한 소재는 건너뛰고 다음 순위)
 5. 민감한 정치·사건사고(사망, 범죄 피해자 등)는 사실 확인된 경우만 중립적으로, 개인 신상 위주 소재는 제외.
 
+## A2. 제작 대기 사실 확인 (2026-11-21 사용자 결정)
+- 제작 대기(selected)가 **2개 이상**이면, 그 회차에 각 후보를 바로 사실 확인(WebSearch로 복수 매체·공식 발표 대조).
+- 결과를 candidates에 factCheck {status:"ok"|"fix"|"fail", checkedAt, notes:"확인된 사실 · 고칠 점"}로 기록(이미 factCheck 있으면 건너뜀). 틀린 내용은 summary/then도 고침.
+- 제작 시 factCheck 메모를 그대로 사용.
+
+## 0. 실행 방식 (2026-11-21 개편: 별도 예약 작업)
+- 5분 점검은 대화가 아니라 **별도 예약 작업 'Neols 5분 점검'(5분마다, 푸시 끔)**이 매번 새 세션에서 실행. send_later로 대화에 재예약하지 않음.
+- 새 세션 준비: add_repo(Marrono/neols-media, push) → `git clone` → 작업 폴더 = 클론/tools (스크립트·json·PIPELINE.md). 사진 보관함 = 클론/photos.
+  렌더 결과물은 클론/<날짜-id>/ 에 저장 후 commit·push. 사이트 원본은 tools/site_index.html.
+- 겹침 방지: 시작할 때 meta/status.lastRun이 4분 이내면 다른 실행이 돌고 있는 것으로 보고 바로 끝냄. 시작 즉시 lastRun 갱신.
+
 ## C. 마무리
 - **중복 예약 방지**: 다음 회차를 예약하기 전에 meta/status.nextRun을 확인해서, 이미 지금보다 미래 시각이면(다른 회차가 예약해 둔 것) 새로 예약하지 않음. 예약할 때는 nextRun을 먼저 갱신.
 - meta/status lastRun·nextRun 갱신(ifVersion).
-- 다음 회차 send_later: **24시간 쉬지 않고** 15분 뒤(:00/:15/:30/:45). 밤에도 동일.
-- :15/:30/:45 회차는 A(15분 지난 제작 대기)·photoPending·meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
-- 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
+- (예전) 다음 회차 send_later 재예약 — **별도 예약 작업으로 옮긴 뒤로는 하지 않음**. nextRun은 다음 5분 슬롯으로만 기록.
+- 매 회차: A(15분 지난 제작 대기)·A2(사실 확인)·photoPending·meta/request·B(탐색) 모두 확인. 할 일이 없으면 조용히 끝냄.
+- **5분 점검은 푸시 알림을 띄우지 않음 (2026-11-21 사용자 결정).** SendUserMessage·PushNotification 쓰지 않고, 점검 회차의 최종 답은 아주 짧은 한 줄로만 남김. 새 후보·초안은 사이트에 반영되는 것으로 충분.
+- (예전 규칙, 참고) 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
 - **알림 조건(활동 기반):** 알림 전 meta/siteSeen.at(사이트 열람·터치 시 자동 기록)과 meta/chatSeen.at(사용자가 이 대화에 메시지를 보낼 때마다 Claude가 기록) 중 최근 값을 확인. **30분 이내면 알림, 30분 넘게 반응 없으면 알림 생략**(작업·사이트 반영은 그대로 계속). 사용자가 다시 반응하는 순간부터 알림 재개.
 - 사용자가 채팅에 메시지를 보내면 그 턴에서 meta/chatSeen {at: 메시지 시각}을 set으로 갱신.
 

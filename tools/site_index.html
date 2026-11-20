@@ -68,7 +68,18 @@
   .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#111; color:#fff;
     padding:10px 16px; border-radius:30px; font-size:14px; opacity:0; transition:opacity .2s; pointer-events:none; }
   .toast.show { opacity:1; }
-  .topbar { display:flex; justify-content:center; margin:-8px 0 14px; }
+  .topbar { display:flex; justify-content:center; gap:8px; margin:-8px 0 14px; }
+  #dupBtn { border:1px solid var(--line); background:#fff; border-radius:30px; padding:7px 16px;
+    font:inherit; font-size:13px; font-weight:700; color:#333; cursor:pointer; }
+  #dupPanel { background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin:0 0 14px; font-size:13.5px; line-height:1.6; }
+  #dupPanel .dh { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  #dupPanel .dh b { font-size:15px; }
+  #dupPanel .dsub { color:var(--mute); font-size:12.5px; margin-top:2px; }
+  #dupPanel .dgrp { border-top:1px solid var(--line); margin-top:12px; padding-top:10px; }
+  #dupPanel .dt { font-weight:900; }
+  #dupPanel .dm { margin-top:6px; padding:8px 10px; background:var(--bg); border-radius:8px; }
+  #dupPanel .dm .meta { font-size:12px; color:var(--mute); }
+  #dupPanel .chip { display:inline-block; font-size:11.5px; background:#E3E9FF; color:var(--accent); border-radius:20px; padding:1px 8px; margin:3px 4px 0 0; }
   #refreshBtn { border:1px solid var(--line); background:#fff; border-radius:30px; padding:7px 16px;
     font:inherit; font-size:13px; font-weight:700; color:#333; cursor:pointer; }
   #refreshBtn .ic { display:inline-block; }
@@ -88,7 +99,8 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="topbar"><button id="refreshBtn" aria-label="새로고침"><span class="ic">↻</span> 새로고침</button></div>
+  <div class="topbar"><button id="refreshBtn" aria-label="새로고침"><span class="ic">↻</span> 새로고침</button><button id="dupBtn">🔁 소재 중복 확인</button></div>
+  <div id="dupPanel" hidden></div>
   <header>
     <div><div class="logo">Ne<i>ol</i>s</div><div class="tag">잊혀진 뉴스와 오늘의 뉴스를 잇다</div></div>
     <div class="status" id="status">불러오는 중…</div>
@@ -104,10 +116,11 @@
   <div id="list"><div class="empty">초안을 불러오는 중이에요…</div></div>
   <div class="howto">
     <b style="color:#111">사용법</b><br>
-    🔍 소재 후보: 사람들의 관심이 급상승하는 소재가 생기면 그때 올라와요(네이버 많이 본 뉴스 기준, 24시간 매시 확인). ‘이걸로 만들기’를 누르면 제작 대기로 가고, ‘⚡ 지금 만들기’를 누르거나 70분이 지나면 만들어져요.<br>
+    🔍 소재 후보: 사람들의 관심이 급상승하는 소재가 생기면 그때 올라와요(네이버 많이 본 뉴스 기준, 24시간 5분마다 확인). ‘이걸로 만들기’를 누르면 제작 대기로 가고, ‘⚡ 지금 만들기’를 누르거나 15분이 지나면 만들어져요.<br>
     ✅ 포스팅(카드뉴스): ‘지금 올리기’를 누르면 @neols.news에 바로 게시돼요. 릴스는 직접 올린 뒤 ‘업로드 완료’를 눌러주세요. 직접 올리고 싶으면 파일을 받아 올린 뒤 ‘업로드 완료’를 눌러주세요.<br>
     ⏰ 다음에: 보관했다가 다음 탐색 때 다시 다듬어 제안해요.<br>
-    ✕ 거절: 이유를 남기면 다음 초안에 반영해요.
+    ✕ 거절: 이유를 남기면 다음 초안에 반영해요.<br>
+    🔁 소재 중복 확인: 소재 후보·제작 대기 소재가 예전 후보·초안과 겹치는지 보여줘요. 참고용이라 아무것도 막지 않아요.
   </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -209,7 +222,7 @@ function candHTML(c){
       <a class="b-post" href="${CHAT_URL}" target="_blank" rel="noopener" data-act="makenow" data-id="${c.id}"
          style="display:flex;align-items:center;justify-content:center;border-radius:10px;padding:13px 0;font-size:15px;font-weight:700;text-decoration:none">⚡ 지금 만들기</a>
       <button class="b-later" data-act="unpick" data-id="${c.id}">취소</button></div>
-      <div style="padding:0 16px 14px;font-size:12.5px;color:var(--mute);line-height:1.6">그냥 두면 <b style="color:#111">${fmt((c.decidedAt||Date.now()) + 70*60e3)}</b> 무렵 자동으로 만들어져요 (제작 대기 70분 후).</div>`;
+      <div style="padding:0 16px 14px;font-size:12.5px;color:var(--mute);line-height:1.6">그냥 두면 <b style="color:#111">${fmt((c.decidedAt||Date.now()) + 15*60e3)}</b> 무렵 자동으로 만들어져요 (제작 대기 15분 후).</div>`;
   else if (st === 'made') bottom = `<div class="decided"><span><span class="pill p-done">초안 완성</span> 검토 대기 탭에서 확인하세요</span></div>`;
   else bottom = `<div class="decided"><span><span class="pill p-later">패스함</span></span>
       <button class="ghost" data-act="unskip" data-id="${c.id}">되돌리기</button></div>`;
@@ -231,7 +244,7 @@ async function setCand(id, status){
   const patch = { status, decidedAt: status==='new' ? null : Date.now() };
   try { await db.doc('candidates/'+id).update(patch);
         cands = cands.map(x => x.id===id ? { ...x, ...patch } : x); render();
-        toast(status==='selected' ? '제작 대기에 넣었어요 · 70분 뒤 자동으로 만들어져요' : status==='skipped' ? '패스했어요' : '되돌렸어요'); }
+        toast(status==='selected' ? '제작 대기에 넣었어요 · 15분 뒤 자동으로 만들어져요' : status==='skipped' ? '패스했어요' : '되돌렸어요'); }
   catch(e){ toast('저장하지 못했어요. 다시 눌러주세요.'); }
 }
 
@@ -246,7 +259,7 @@ function render(){
       .sort((a,b)=> (order[a.status]??1)-(order[b.status]??1) || (b.createdAt||0)-(a.createdAt||0)).slice(0, 30);
     const banner = (current === 'making' && list.length)
       ? `<div style="margin-top:16px;background:#E3E9FF;border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.6;color:#1d2b66">
-           <b>${list.length}개</b>가 제작 대기 중이에요. 제작 대기로 넘어오고 70분이 지나면 자동으로 만들어져요.<br>
+           <b>${list.length}개</b>가 제작 대기 중이에요. 제작 대기로 넘어오고 15분이 지나면 자동으로 만들어져요.<br>
            바로 만들려면 ‘⚡ 지금 만들기’를 눌러주세요.</div>` : '';
     $('#list').innerHTML = list.length ? banner + list.map(candHTML).join('') :
       (current === 'making' ? '<div class="empty">제작 대기 중인 소재가 없어요.<br>‘소재 후보’에서 ‘이걸로 만들기’를 누르면 여기로 와요.</div>'
@@ -284,7 +297,7 @@ async function publish(d){
     busyId = null;
     await db.doc('drafts/'+d.id).update({ status:'done', decidedAt:Date.now(), igPostId:String(pid), publishedAt:Date.now() });
     drafts = drafts.map(x => x.id===d.id ? { ...x, status:'done', igPostId:String(pid), decidedAt:Date.now() } : x);
-    render(); toast('인스타그램에 올렸어요 🎉');
+    render(); playDone(); toast('인스타그램에 올렸어요 🎉');
   } catch (e) {
     busyId = null;
     const c = e && e.code;
@@ -345,6 +358,58 @@ async function refreshAll(){
 }
 $('#refreshBtn').addEventListener('click', refreshAll);
 
+// ── 소재 중복 확인: 지금 후보·제작 대기 소재가 예전 소재와 겹치는지 참고용으로 보여줘요 (판단은 직접) ──
+const DUP_STOP = new Set(['있다','없다','했다','한다','이유','오늘','지금','그때','뉴스','이번','관련','논란','발표','확인','국내','올해','최근','사람','정부','결국','처음','만에','이후','보도','기준','제작','필수','재확인','공식','1차','어떻게','무슨','진짜','정말','다시','누가','얼마나','넘게','이상','이하','가장','처럼']);
+function dupToks(s){
+  const out = new Set();
+  String(s||'').replace(/[^\p{L}\p{N}\s]/gu,' ').split(/\s+/).forEach(w => {
+    w = w.replace(/(에서는|으로는|에게서|까지는|이라는|에서|으로|에게|까지|부터|처럼|이다|했다|한다|하는|된다|됐다|은|는|이|가|을|를|의|에|도|로|와|과|만)$/,'');
+    if (w.length >= 2 && !DUP_STOP.has(w) && !/^\d+$/.test(w)) out.add(w);
+  });
+  return out;
+}
+function dupBigrams(s){ const t=String(s||'').replace(/[^\p{L}\p{N}]/gu,''); const r=new Set(); for(let i=0;i<t.length-1;i++) r.add(t.slice(i,i+2)); return r; }
+function jac(a,b){ if(!a.size||!b.size) return 0; let n=0; a.forEach(x=>{ if(b.has(x)) n++; }); return n/(a.size+b.size-n); }
+const C_ST = { new:'소재 후보', selected:'제작 대기', made:'초안 완성', skipped:'패스' };
+function runDupCheck(){
+  const panel = $('#dupPanel');
+  const items = [];
+  const linked = new Set();
+  cands.forEach(c => { (c.draftIds||[]).forEach(x => linked.add(x));
+    items.push({ id:c.id, src:'cand', title:c.title||'', st:C_ST[c.status||'new']||'', at:c.createdAt,
+      text:[c.title, ...(Array.isArray(c.summary)?c.summary:[c.summary]), c.then].join(' ') }); });
+  const seenT = new Set();
+  drafts.forEach(d => { if (linked.has(d.id)) return; const k=(d.title||'').trim(); if (seenT.has(k)) return; seenT.add(k);
+    items.push({ id:d.id, src:'draft', title:d.title||'', st:'초안 · '+(STATUS_TXT[d.status]||'검토 대기'), at:d.createdAt,
+      text:[d.title, ...(d.topics||[])].join(' ') }); });
+  items.forEach(it => { it.tk = dupToks(it.text); it.bg = dupBigrams(it.title); });
+  const targets = items.filter(it => it.src==='cand' && (it.st==='소재 후보' || it.st==='제작 대기'));
+  let pairs = 0;
+  const groups = targets.map(t => {
+    const ms = items.filter(o => o.id !== t.id).map(o => {
+      const shared = [...t.tk].filter(x => o.tk.has(x));
+      const tj = jac(t.bg, o.bg);
+      const score = shared.length + tj*6;
+      return { o, shared, tj, score };
+    }).filter(m => m.shared.length >= 2 || m.tj >= 0.25 || (m.shared.length >= 1 && m.tj >= 0.12))
+      .sort((a,b) => b.score - a.score).slice(0, 5);
+    pairs += ms.length;
+    return { t, ms };
+  });
+  const body = targets.length ? groups.map(g => `<div class="dgrp"><div class="dt">${esc(g.t.title)}</div>
+      <div class="dsub">${esc(g.t.st)}${g.t.at?' · '+fmt(g.t.at):''}</div>
+      ${g.ms.length ? g.ms.map(m => `<div class="dm"><div>${esc(m.o.title)}</div>
+          <div class="meta">${esc(m.o.st)}${m.o.at?' · '+fmt(m.o.at):''}${m.tj>=0.25?' · 제목이 많이 비슷해요':''}</div>
+          ${m.shared.length?`<div>${m.shared.slice(0,6).map(w=>`<span class="chip">${esc(w)}</span>`).join('')}</div>`:''}</div>`).join('')
+        : `<div class="dm" style="color:var(--mute)">겹쳐 보이는 소재가 없어요</div>`}</div>`).join('')
+    : `<div class="dgrp" style="color:var(--mute)">지금 확인할 소재 후보·제작 대기 소재가 없어요.</div>`;
+  panel.innerHTML = `<div class="dh"><b>소재 중복 확인</b><button class="ghost" id="dupClose">닫기</button></div>
+    <div class="dsub">소재 후보·제작 대기 ${targets.length}개를 지금까지의 후보·초안 ${items.length}개와 비교했어요 · 겹쳐 보이는 것 ${pairs}건<br>같은 소재의 다른 이슈일 수 있으니 참고만 하고 올릴지는 직접 판단해 주세요.</div>${body}`;
+  panel.hidden = false;
+  $('#dupClose').onclick = () => { panel.hidden = true; };
+}
+$('#dupBtn').addEventListener('click', runDupCheck);
+
 async function saveFiles(d){
   const files = d.kind==='reel' ? [{url:d.video, name:`${d.id}.mp4`}] :
     (d.images||[]).map((u,i)=>({url:u, name:`${d.id}_${String(i+1).padStart(2,'0')}.png`}));
@@ -355,6 +420,24 @@ async function saveFiles(d){
     } catch(e) { toast('저장을 취소했거나 실패했어요'); return; }
   }
   toast('파일을 저장했어요');
+}
+
+
+// ── 효과음: 직접 올리기·업로드 완료·지금 올리기 성공 때 '띠링' ──
+let actx = null;
+function unlockSound(){ try { actx = actx || new (window.AudioContext||window.webkitAudioContext)(); if (actx.state==='suspended') actx.resume(); } catch(e){} }
+function playDone(){
+  try {
+    unlockSound(); if(!actx) return;
+    const t0 = actx.currentTime + 0.02;
+    [[880,0],[1318.5,0.11]].forEach(([f,dt])=>{
+      const o = actx.createOscillator(), g = actx.createGain();
+      o.type='sine'; o.frequency.setValueAtTime(f, t0+dt);
+      g.gain.setValueAtTime(0.0001, t0+dt); g.gain.exponentialRampToValueAtTime(0.25, t0+dt+0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0+dt+0.45);
+      o.connect(g).connect(actx.destination); o.start(t0+dt); o.stop(t0+dt+0.5);
+    });
+  } catch(e){}
 }
 
 document.addEventListener('click', async e => {
@@ -372,12 +455,12 @@ document.addEventListener('click', async e => {
     return;  // 링크(<a>)가 대화를 열어요
   }
   if (act==='post') { confirmId = id; openNote = null; render(); }
-  else if (act==='publish' && d) await publish(d);
-  else if (act==='manual') { confirmId = null; await setStatus(id,'post'); }
+  else if (act==='publish' && d) { unlockSound(); await publish(d); }
+  else if (act==='manual') { playDone(); confirmId = null; await setStatus(id,'post'); }
   else if (act==='later' || act==='reject') { openNote={id,status:act}; render(); $('#noteText')?.focus(); }
   else if (act==='cancel') { openNote=null; confirmId=null; render(); }
   else if (act==='confirm') { const n=$('#noteText').value.trim(); const s=openNote.status; openNote=null; await setStatus(id,s,n); }
-  else if (act==='done') await setStatus(id,'done');
+  else if (act==='done') { playDone(); await setStatus(id,'done'); }
   else if (act==='undo') await setStatus(id,'pending');
   else if (act==='copy' && d) {
     const cap=[d.caption,(d.hashtags||[]).join(' ')].filter(Boolean).join('\n\n');
