@@ -319,7 +319,7 @@ def render(data, out_dir):
     single = len(data["items"]) == 1
     if single and data.get("theme", "cine") == "cine":
         import cine, tpl
-        pages = tpl.card_pages(data)
+        pages = tpl.card_pages6(data)
         global W, H
         W, H = cine.CW, cine.CH
     elif single:

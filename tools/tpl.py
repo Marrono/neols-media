@@ -396,3 +396,132 @@ def card_pages(d):
 def reel_html(d):
     t = pick(d)
     return {"cine": cine.reel_html, "split": split_reel_html, "collage": collage_reel_html}[t](d)
+
+
+# ═════════════ 6~8장 구성 (2026-11-20 개편) ═════════════
+# 1 표지 → 2 사진+핵심 숫자 → 3 THEN 사진+연도  (이미지 중심, 글 최소)
+# 4 쉽게 보기(NOW 풀이) → 5 여담 → (그래픽 · THEN 자세히) → 홍보
+import re as _re
+
+
+def _img_stat(d, it, ps, light):
+    st = stat(it); ph = (ps[1] if len(ps) > 1 else ps[0]) if ps else None
+    chips = _chips(it, 30)
+    big = (f"<div style='font-size:30px;font-weight:700;opacity:.85'>{esc(st['label'])}</div>"
+           f"<div style='font-size:{190 if len(st['value']) <= 6 else 140}px;font-weight:900;line-height:1.02;letter-spacing:-0.04em;white-space:nowrap'>"
+           + (f"<span style='background:linear-gradient(transparent 58%,#C9D4FF 58%)'>{esc(st['value'])}</span>" if light else esc(st['value'])) + "</div>"
+           if st else f"<div style='font-size:62px;font-weight:900;line-height:1.3'>{esc(it['points'][0])}</div>")
+    big += f"<div style='display:flex;flex-wrap:wrap;gap:12px;margin-top:22px'>{chips}</div>" if chips else ""
+    if light:
+        css = POL + ".b{position:absolute;left:72px;right:90px;bottom:120px}"
+        body = (_pol(ph, "left:90px;top:170px;width:900px;height:700px;transform:rotate(2deg)", "background-position:50% 45%")
+                + cine._chrome(d, 1, 6, f"NOW · {d['date']}", "") + f"<div class='b'>{big}</div>")
+        return _page(css, body, True)
+    css = ".b{position:absolute;left:72px;right:90px;bottom:120px}"
+    body = (cine._bg(ph, "transform:scale(1.06)") + "<div class='shade'></div>"
+            + cine._chrome(d, 1, 6, f"NOW · {d['date'][:7]}", f"사진 · {esc(ph['credit'])}" if ph else "")
+            + f"<div class='b'>{big}</div>")
+    return cine._page(css, body)
+
+
+def _img_then(d, it, ps, light):
+    ty = year_of(it["then_label"]); head, _ = then_parts(it)
+    pt = (ps[1] if (light and len(ps) > 1) else ps[0]) if ps else None
+    if light:
+        css = POL + ".st{position:absolute;left:600px;top:640px;font-size:96px;font-weight:900;color:#E0321F;border:9px solid #E0321F;padding:0 26px;letter-spacing:.06em;border-radius:12px;transform:rotate(-12deg);mix-blend-mode:multiply}" \
+                    ".b{position:absolute;left:72px;right:90px;bottom:120px}"
+        body = (_pol(pt, "left:90px;top:170px;width:860px;height:660px;transform:rotate(-2deg)", SEPIA + ";background-position:50% 55%")
+                + "<div class='st'>THEN</div>" + cine._chrome(d, 2, 6, f"THEN · {it['then_label']}", "")
+                + f"<div class='b'><div style='font-size:150px;font-weight:900;color:#E0321F;line-height:1'>{ty or esc(it['then_label'])}</div>"
+                + f"<div style='font-size:52px;font-weight:900;margin-top:16px;line-height:1.25'>{esc(head)}</div></div>")
+        return _page(css, body, True)
+    css = (".st{position:absolute;left:72px;bottom:470px;font-size:56px;font-weight:900;letter-spacing:.06em;border:5px solid #fff;padding:0 22px}"
+           ".b{position:absolute;left:66px;right:90px;bottom:120px}")
+    body = (cine._bg(pt, SEPIA + ";transform:scale(1.15)") + "<div class='shade'></div>" + cine.GRAIN
+            + cine._chrome(d, 2, 6, f"THEN · {it['then_label']}", f"사진 · {esc(pt['credit'])}" if pt else "")
+            + "<div class='st'>THEN</div>"
+            + f"<div class='b'><div style='font-size:220px;font-weight:900;line-height:1;letter-spacing:-0.03em'>{ty or esc(it['then_label'])}</div>"
+            + f"<div style='font-size:54px;font-weight:900;margin-top:14px;line-height:1.25'>{esc(head)}</div></div>")
+    return cine._page(css, body)
+
+
+def _fix_segs(html_, k, n, light):
+    segs = "".join(f"<div class='{'on' if i <= k else ''}'></div>" for i in range(n))
+    return _re.sub(r"<div class='segs'>.*?</div><div class='top'>", f"<div class='segs'>{segs}</div><div class='top'>", html_, count=1, flags=_re.S)
+
+
+def card_pages6(d):
+    t = pick(d); it = d["items"][0]; ps = photos(it); light = t == "collage"
+    base_fn = {"cine": cine.card_pages, "split": split_cards, "collage": collage_cards}[t]
+    plain = dict(it, extras=[], split_then=True, then_points=it.get("then_points") or [it["link"]])
+    full = base_fn(dict(d, items=[plain]))           # [표지] + 그래픽들 + [NOW, THEN, 홍보]
+    nv = len(full) - 4
+    cover, visuals, then_detail, outro = full[0], full[1:1 + nv], full[-2], full[-1]
+    ex = it.get("explain") or {}
+    eit = dict(plain, title=ex.get("title", it["title"]), points=ex.get("lines", it["points"]),
+               reel=dict(it.get("reel", {}), stat=None), visuals=[], visual=None)
+    now_explain = base_fn(dict(d, items=[eit]))[-3]
+    asides = list(it.get("asides") or it.get("extras") or [{"kicker": "SUMMARY", "title": "한눈에 정리", "lines": it["points"]}])
+    aside_pages = []
+    for a in asides:
+        a = dict(a); a.setdefault("kicker", "여담")
+        if light:
+            pg = collage_cards(dict(d, items=[dict(plain, extras=[a], visuals=[], visual=None)]))
+            aside_pages.append(pg[-2])
+        else:
+            aside_pages.append(cine.c_extra(d, it, a, ps, 0, 6))
+    while 5 + len(aside_pages) + len(visuals) + 1 > 8 and len(aside_pages) > 1:
+        aside_pages.pop()
+    keep_then = True
+    while 5 + len(aside_pages) + len(visuals) + int(keep_then) > 8:
+        if len(visuals) > 1: visuals.pop()
+        elif keep_then: keep_then = False
+        else: visuals.pop()
+    pages = [cover, _img_stat(d, it, ps, light), _img_then(d, it, ps, light), now_explain] + aside_pages + visuals \
+            + ([then_detail] if keep_then else []) + [outro]
+    n = len(pages)
+    return [_fix_segs(p, k, n, light) for k, p in enumerate(pages)]
+
+
+# ═════════════ 릴스 25초: 기존 15초 흐름에 '쉽게 보기'·'여담' 장면 끼워 넣기 ═════════════
+REEL_DUR = 25.0
+INS = {"cine": (6.6, 10.5), "split": (7.9, 12.15), "collage": (7.0, 11.0)}
+EXP_LEN, ASIDE_LEN = 5.5, 4.5
+
+
+def _overlay(d, it, light):
+    ps = photos(it); ph = ps[-1] if ps else None
+    ex = it.get("explain") or {}; lines = ex.get("lines", it["points"])[:3]
+    a = (it.get("asides") or it.get("extras") or [{"title": "한눈에 정리", "lines": it["points"][:2]}])[0]
+    fg, sub, acc = ("#111", "#444", ACCENT) if light else ("#fff", "#ddd", LIGHT)
+    bg = ("background:#F7F6F2" if light else
+          (f"background:url({data_url(ph['path'])}) center/cover" if ph else "background:#0B0B0C"))
+    dim = "" if light else "<div style='position:absolute;inset:0;background:rgba(6,6,8,.78);backdrop-filter:blur(0px)'></div>"
+    blur = "" if light else "filter:blur(14px);transform:scale(1.15);"
+    def layer(i, kicker, title, ls):
+        return (f"<div class='ov' id='ov{i}' style='position:absolute;inset:0;opacity:0;z-index:50;overflow:hidden'>"
+                f"<div style='position:absolute;inset:-40px;{bg};{blur}'></div>{dim}"
+                f"<div style='position:absolute;left:80px;right:150px;top:560px;color:{fg}'>"
+                f"<div style='font-size:34px;font-weight:800;letter-spacing:.14em;color:{acc}'>{kicker}</div>"
+                + (f"<div style='font-size:72px;font-weight:900;line-height:1.25;margin-top:18px'>{esc(title)}</div>" if title else "")
+                + "".join(f"<div class='ol' style='font-size:50px;font-weight:800;line-height:1.38;margin-top:34px;color:{fg};opacity:0'>"
+                          f"<span style='color:{acc}'>—</span> {esc(l)}</div>" for l in ls)
+                + "</div></div>")
+    return layer(0, "쉽게 말하면", ex.get("title", ""), lines) + layer(1, "여담", a.get("title", ""), a.get("lines", [])[:2])
+
+
+def reel_html25(d):
+    t = pick(d); it = d["items"][0]
+    html_ = reel_html(d)
+    A, B = INS[t]
+    js = f"""
+const A={A},B={B},EL={EXP_LEN},AL={ASIDE_LEN};
+function ovs(id,lt,len){{const o=document.getElementById(id);if(!o)return;const op=Math.min(1,Math.max(0,Math.min(lt/.35,(len-lt)/.35)));
+ o.style.opacity=(lt>=0&&lt<=len)?op:0;o.querySelectorAll('.ol').forEach((l,i)=>{{const a=Math.min(1,Math.max(0,(lt-.5-i*.7)/.4));l.style.opacity=a;l.style.transform=`translateY(${{(1-a)*30}}px)`}})}}
+function draw25(T){{
+ let m, e=-1, s=-1;
+ if(T<A) m=T; else if(T<A+EL){{m=A;e=T-A}} else if(T<B+EL){{m=T-EL}} else if(T<B+EL+AL){{m=B;s=T-B-EL}} else m=T-EL-AL;
+ draw(m); ovs('ov0',e,EL); ovs('ov1',s,AL);
+ const pb=document.getElementById('pb'); if(pb) pb.style.width=(T/{REEL_DUR}*100)+'%';
+}}"""
+    return html_.replace("</body>", _overlay(d, it, t == "collage") + f"<script>{js}</script></body>")

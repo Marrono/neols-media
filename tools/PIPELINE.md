@@ -2,6 +2,15 @@
 
 사이트 slug 77346c44-3520-4b60-a03e-fa5bbc4e0d06 · Instagram account 17841480857834317 (@neols.news)
 
+## 카드뉴스 6~8장 · 릴스 25초 구성 (2026-11-20 사용자 결정, 최우선)
+- 카드뉴스는 **최소 6장, 최대 8장** (예전 4~8장 규칙 대체). render.py → tpl.card_pages6 가 자동 구성:
+  1 표지(사진+훅) → 2 사진+핵심 숫자 → 3 THEN 사진+연도  ← 이미지 중심, 글 최소, 한눈에 이목 집중
+  4 쉽게 보기(NOW 풀이) → 5 여담 → (그래픽 · THEN 자세히) → 마지막 홍보
+- JSON에 꼭 채울 것: explain {title:"질문형 제목", lines:[쉬운 말 3줄]}, asides [{kicker:"여담", title, lines:[2~3줄]}] (사실 확인된 흥미로운 뒷이야기·배경지식).
+  reel.stat(숫자 장면), reel.hook, then_head/then_sub 도 필수.
+- 8장 넘으면 여담 2번째 → 그래픽 2번째 → THEN 자세히 → 그래픽 순으로 뺌.
+- 릴스는 **25초**(15초 흐름 + '쉽게 말하면' 5.5초 + '여담' 4.5초 장면 삽입). cine.make_reel → tpl.reel_html25.
+
 ## 템플릿 3종 — 소재마다 어울리는 걸 골라 씀 (2026-11-20 사용자 결정)
 - JSON items[0].template 에 "cine" | "split" | "collage" 지정 → render.py·reel.py가 tpl.py로 자동 적용(카드·릴스 같은 템플릿).
 - 고르는 기준:
@@ -43,7 +52,7 @@
      thumb.wikimedia.org/wikipedia/commons/thumb/<md5[0]>/<md5[:2]>/<파일명>/1280px-<파일명> (파일명 공백→_, md5는 파일명 기준).
      그래도 안 되면 photo 생략(그래픽만). CC BY는 credit 끝에 "· 잘라서 사용"을 붙임(변경 표시).
    제목이 길면 NOW 카드에서 3줄이 되지 않게 짧게(한 줄 12자 안팎).
-2. 카드: `python3 render.py <json> <out>` — **전체 최소 4장, 최대 8장** (render.py가 자동으로 맞춤)
+2. 카드: `python3 render.py <json> <out>` — **전체 최소 6장, 최대 8장(위 6~8장 구성 참고)** (render.py가 자동으로 맞춤)
    표지 → 그래픽 0~2장(visuals 배열, 또는 visual 1개) → NOW(+THEN 상자) 또는 NOW / THEN 분리 → 추가 설명 0~n장 → 홍보.
    - then_points(THEN 보충 2~3줄) 또는 split_then:true 가 있으면 THEN을 검은 배경 전용 페이지로 분리.
    - extras: [{"kicker":"TIP|MORE|WHY","title","lines":[2~4줄],"source"}] — 사실 확인된 내용만.

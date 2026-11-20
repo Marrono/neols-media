@@ -393,20 +393,21 @@ def make_reel(d, out_mp4, frames=None, cover=None):
         br = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox"])
         pg = br.new_page(viewport={"width": RW, "height": RH})
         import tpl
-        pg.set_content(tpl.reel_html(d)); pg.wait_for_timeout(500)
+        pg.set_content(tpl.reel_html25(d)); pg.wait_for_timeout(500)
+        dur = tpl.REEL_DUR
         if cover:  # 릴스 표지: 훅 문장이 다 나온 순간
-            pg.evaluate("draw(1.4)"); pg.screenshot(path=cover, type="jpeg", quality=92)
+            pg.evaluate("draw25(1.4)"); pg.screenshot(path=cover, type="jpeg", quality=92)
         if frames:
             for t in frames:
-                pg.evaluate(f"draw({t})"); pg.screenshot(path=f"{out_mp4}_{t:05.2f}.png")
+                pg.evaluate(f"draw25({t})"); pg.screenshot(path=f"{out_mp4}_{t:05.2f}.png")
         else:
             tmp = out_mp4[:-4] + ".part.mp4"
             ff = subprocess.Popen(["ffmpeg", "-y", "-loglevel", "error", "-f", "image2pipe", "-framerate", str(FPS),
                                    "-c:v", "mjpeg", "-i", "-", "-f", "lavfi", "-i", "anullsrc=r=44100:cl=stereo",
                                    "-shortest", "-c:v", "libx264", "-crf", "20", "-preset", "veryfast",
                                    "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "64k", tmp], stdin=subprocess.PIPE)
-            for i in range(int(DUR * FPS)):
-                pg.evaluate(f"draw({i / FPS})")
+            for i in range(int(dur * FPS)):
+                pg.evaluate(f"draw25({i / FPS})")
                 ff.stdin.write(pg.screenshot(type="jpeg", quality=92))
             ff.stdin.close()
             if ff.wait() == 0:
