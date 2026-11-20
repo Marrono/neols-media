@@ -525,3 +525,60 @@ function draw25(T){{
  const pb=document.getElementById('pb'); if(pb) pb.style.width=(T/{REEL_DUR}*100)+'%';
 }}"""
     return html_.replace("</body>", _overlay(d, it, t == "collage") + f"<script>{js}</script></body>")
+
+
+# ═════════════ 문구 다듬기 (2026-11-20 밤) ═════════════
+# 템플릿에 박힌 영어 라벨·딱딱한 문구를 자연스러운 한국어로 바꿔요. 카드·릴스 HTML 모두 마지막에 한 번 통과.
+_LIC = {"Public domain": "퍼블릭 도메인", "public domain": "퍼블릭 도메인"}
+_ANON = {"me", "unknown", "미상", "작자 미상", ""}
+
+
+def _credit(m):
+    artist = (m.group(1) or "").strip()
+    lic = _LIC.get(m.group(2).strip(), m.group(2).strip())
+    crop = " · 잘라서 사용" if m.group(3) else ""
+    if artist.lower() in _ANON:
+        return f"위키미디어 공용 ({lic}){crop}"
+    return f"{artist} ({lic}, 위키미디어 공용){crop}"
+
+
+def polish(html_, d):
+    y, mo, dd = (d.get("date", "") + "..").split(".")[:3]
+    today = f"{int(mo)}월 {int(dd)}일 뉴스" if mo.isdigit() and dd.isdigit() else "오늘의 뉴스"
+    s = html_
+    # 오른쪽 위 알약: 큰 NOW/THEN 라벨과 겹치지 않게 한국어로
+    s = _re.sub(r"(class='tag'>)NOW · [^<]*<", rf"\g<1>{today}<", s)
+    s = _re.sub(r"(class='tag'>)THEN · ([^<]*)<", r"\g<1>다시 보는 \2<", s)
+    s = s.replace("class='tag'>Neols<", "class='tag'>팔로우<")
+    s = _re.sub(r'((?:NTAG|NT)=")NOW · [^"]*"', rf'\g<1>{today}"', s)
+    s = _re.sub(r'((?:TTAG|TT)=")THEN · ([^"]*)"', r'\g<1>다시 보는 \2"', s)
+    # 고정 문구
+    rep = [
+        ("넘겨서 보기 →", "옆으로 넘겨보세요 →"),
+        ("BY THE NUMBERS", "숫자로 보기"),
+        (">SUMMARY<", ">한눈에 보기<"), (">MORE<", ">더 알아보기<"),
+        (" · 그래픽 Neols", ""),
+        (" — 이 뉴스의 어제까지", "에는 무슨 일이 있었을까?"),
+        ("<b>NOW →</b>", "<b>그때와 지금 →</b>"),
+        ("매일 꼭 알아야 할 국내 뉴스<br>그리고 그 뉴스의 어제까지", "오늘 꼭 알아야 할 뉴스,<br>그 뉴스가 지나온 이야기까지"),
+        ("<i>팔로우하기</i>", "<i>팔로우</i>"),
+        ("오늘의 뉴스에도 어제가 있어요", "모든 뉴스에는 어제가 있어요"),
+    ]
+    for a, b in rep:
+        s = s.replace(a, b)
+    s = _re.sub(r"(class='k'>)NOW · ", r"\g<1>오늘의 뉴스 · ", s)
+    # 사진 출처: 'Me / Wikimedia Commons / Public domain' 같은 원문 표기 정리
+    s = _re.sub(r"(?:([^<>/·\"']+?) / )?Wikimedia Commons / ([^<·\"']+?)( · 잘라서 사용)?(?=[<\"']|$)", _credit, s)
+    return s
+
+
+_card_pages6_raw = card_pages6
+_reel_html25_raw = reel_html25
+
+
+def card_pages6(d):
+    return [polish(p, d) for p in _card_pages6_raw(d)]
+
+
+def reel_html25(d):
+    return polish(_reel_html25_raw(d), d)
