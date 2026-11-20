@@ -318,8 +318,8 @@ def render(data, out_dir):
     out.mkdir(parents=True, exist_ok=True)
     single = len(data["items"]) == 1
     if single and data.get("theme", "cine") == "cine":
-        import cine
-        pages = cine.card_pages(data)
+        import cine, tpl
+        pages = tpl.card_pages(data)
         global W, H
         W, H = cine.CW, cine.CH
     elif single:

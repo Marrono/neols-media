@@ -392,7 +392,8 @@ def make_reel(d, out_mp4, frames=None, cover=None):
     with sync_playwright() as p:
         br = p.chromium.launch(executable_path="/usr/bin/google-chrome", args=["--no-sandbox"])
         pg = br.new_page(viewport={"width": RW, "height": RH})
-        pg.set_content(reel_html(d)); pg.wait_for_timeout(500)
+        import tpl
+        pg.set_content(tpl.reel_html(d)); pg.wait_for_timeout(500)
         if cover:  # 릴스 표지: 훅 문장이 다 나온 순간
             pg.evaluate("draw(1.4)"); pg.screenshot(path=cover, type="jpeg", quality=92)
         if frames:
