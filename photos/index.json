@@ -252,5 +252,29 @@
    "대설",
    "겨울"
   ]
+ },
+ {
+  "file": "A_NASA_computer_server_farm_-a.jpg",
+  "title": "File:A NASA computer server farm -a.jpg",
+  "credit": "NASA / Wikimedia Commons / Public domain",
+  "license": "Public domain",
+  "page": "https://commons.wikimedia.org/wiki/File:A_NASA_computer_server_farm_-a.jpg",
+  "tags": [
+   "서버",
+   "해킹",
+   "개인정보"
+  ]
+ },
+ {
+  "file": "A_view_of_the_server_room_at_The_National_Archives.jpg",
+  "title": "File:A view of the server room at The National Archives.jpg",
+  "credit": "The National Archives (UK) / Wikimedia Commons / CC BY 3.0 · 잘라서 사용",
+  "license": "CC BY 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:A_view_of_the_server_room_at_The_National_Archives.jpg",
+  "tags": [
+   "서버",
+   "해킹",
+   "개인정보"
+  ]
  }
 ]

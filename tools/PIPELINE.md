@@ -28,8 +28,8 @@
 - 릴스 표지: reel_cover.jpg = 훅이 다 나온 1.4초 장면(reel.py가 자동 저장).
 
 ## A. 제작 대기 후보 제작 (매 회차 확인)
-- 제작 대상: status:"selected" 이고 **decidedAt(제작 대기로 넘어간 시각)에서 70분 이상 지난 것**.
-  70분이 안 된 것은 그대로 둠. 사용자가 대화에서 "만들어줘"(지금 만들기)라고 하면 시간과 상관없이 즉시 제작.
+- 제작 대상: status:"selected" 이고 **decidedAt(제작 대기로 넘어간 시각)에서 15분 이상 지난 것** (2026-11-21 사용자 결정, 예전 70분).
+  15분이 안 된 것은 그대로 둠. 사용자가 대화에서 "만들어줘"(지금 만들기)라고 하면 시간과 상관없이 즉시 제작.
 1. candidates 중 status:"selected" 각각 → 소재 1개짜리 JSON(items 1개, handle "@neols.news", slogan 포함).
    항목: category, title(\n 줄바꿈), points 3개, then_label, then, link, source. 사실 확인된 것만.
    **표지 사진 찾는 순서** (위에서 안 되면 다음 단계로):
@@ -85,7 +85,7 @@
 - **중복 예약 방지**: 다음 회차를 예약하기 전에 meta/status.nextRun을 확인해서, 이미 지금보다 미래 시각이면(다른 회차가 예약해 둔 것) 새로 예약하지 않음. 예약할 때는 nextRun을 먼저 갱신.
 - meta/status lastRun·nextRun 갱신(ifVersion).
 - 다음 회차 send_later: **24시간 쉬지 않고** 15분 뒤(:00/:15/:30/:45). 밤에도 동일.
-- :15/:30/:45 회차는 A(70분 지난 제작 대기)·photoPending·meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
+- :15/:30/:45 회차는 A(15분 지난 제작 대기)·photoPending·meta/request만 보고, 할 일이 없으면 바로 끝냄(조용히).
 - 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
 - **알림 조건(활동 기반):** 알림 전 meta/siteSeen.at(사이트 열람·터치 시 자동 기록)과 meta/chatSeen.at(사용자가 이 대화에 메시지를 보낼 때마다 Claude가 기록) 중 최근 값을 확인. **30분 이내면 알림, 30분 넘게 반응 없으면 알림 생략**(작업·사이트 반영은 그대로 계속). 사용자가 다시 반응하는 순간부터 알림 재개.
 - 사용자가 채팅에 메시지를 보내면 그 턴에서 meta/chatSeen {at: 메시지 시각}을 set으로 갱신.

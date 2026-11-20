@@ -1,0 +1,101 @@
+{
+ "date": "2026.11.21",
+ "weekday": "토",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "category": "경제·산업",
+   "template": "cine",
+   "title": "삼성·TSMC,\n중국에 일부 칩 출하 중단",
+   "points": [
+    "미국이 첨단 칩의 중국 수출 허가 규정을 강화했어요(19일 발효)",
+    "삼성전자와 TSMC는 허가를 받는 동안 일부 칩 출하를 멈추겠다고 중국 고객사에 알렸어요",
+    "AI 칩뿐 아니라 스마트폰용 칩 고객도 영향을 받아요"
+   ],
+   "then_label": "2024.11",
+   "then": "TSMC가 미국 상무부 지시로 중국 고객사에 7나노 이하 AI 칩 출하를 멈췄어요.",
+   "then_points": [
+    "중국 기업의 AI 칩에서 TSMC가 만든 칩이 발견된 게 계기가 됐어요",
+    "2025년엔 삼성·SK하이닉스 중국 공장의 장비 반입도 개별 허가로 바뀌었어요"
+   ],
+   "link": "반도체는 이제 '얼마나 잘 만드느냐'만큼 '어디에 팔 수 있느냐'가 중요해졌어요.",
+   "source": "파이낸셜타임스(연합뉴스) · 시사저널 · 서울경제",
+   "then_source": "서울신문 · 국민일보(2024.11) · 한국경제(2025.9)",
+   "photos": [
+    {
+     "path": "/home/claude/cardnews/ph/wafer.jpg",
+     "credit": "Rob Bulmahn / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+    },
+    {
+     "path": "/home/claude/cardnews/ph/wafer2.jpg",
+     "credit": "Rob Bulmahn / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+    }
+   ],
+   "visual": {
+    "type": "timeline",
+    "title": "미국의 대중 반도체 통제",
+    "data": [
+     [
+      "2024.11",
+      "TSMC, 중국에 7나노 이하 AI 칩 출하 중단"
+     ],
+     [
+      "2025.8",
+      "삼성·SK하이닉스 중국 공장 장비 반입 개별 허가로"
+     ],
+     [
+      "2026.11.16",
+      "미 상무부, 첨단 칩 수출 허가 규정 강화"
+     ],
+     [
+      "2026.11.19",
+      "삼성·TSMC 일부 칩 출하 중단"
+     ]
+    ],
+    "source": "FT(연합뉴스) · 서울신문 · 한국경제"
+   },
+   "reel": {
+    "hook": "삼성도 멈췄다,\n중국행 반도체",
+    "stat": {
+     "label": "새 수출 규정 발효",
+     "value": "11월 19일"
+    },
+    "chips": [
+     [
+      "down",
+      "AI 칩 출하 중단"
+     ],
+     [
+      "down",
+      "스마트폰 칩도 영향"
+     ]
+    ],
+    "then_head": "2024년, TSMC 7나노 중단",
+    "then_sub": "미국 지시로 중국 AI 칩 고객에게\n7나노 이하 칩 공급을 멈췄어요"
+   },
+   "explain": {
+    "title": "왜 한국 회사가\n미국 허가를 받아요?",
+    "lines": [
+     "삼성·TSMC는 칩을 만들 때 미국 장비와 기술을 써요",
+     "미국 기술이 들어간 첨단 칩이 중국에 가면 미국 허가가 필요해요",
+     "그동안 쓰이던 우회 경로(패키징 업체 경유)가 이번에 막혔어요"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "여담",
+     "title": "파운드리가\n뭐예요?",
+     "lines": [
+      "다른 회사가 설계한 반도체를 대신 만들어 주는 사업이에요",
+      "TSMC가 세계 1위, 삼성전자가 그 뒤를 쫓고 있어요"
+     ]
+    }
+   ],
+   "photo": {
+    "path": "/home/claude/cardnews/ph/wafer.jpg",
+    "credit": "Rob Bulmahn / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+   }
+  }
+ ]
+}
