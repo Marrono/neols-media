@@ -126,6 +126,11 @@ def two_step(a, b, da, db, out):
 
 def build(d, out_dir):
     out = Path(out_dir)
+    if len(d["items"]) == 1 and d.get("theme", "cine") == "cine":
+        import cine
+        out.mkdir(parents=True, exist_ok=True)
+        final = out / f"neols_reel_{d['date'].replace('.', '')}.mp4"
+        return cine.make_reel(d, str(final), cover=str(out / "reel_cover.jpg"))
     (out / "frames").mkdir(parents=True, exist_ok=True)
     pages = {"intro": intro(d), "outro": outro(d)}
     single = len(d["items"]) == 1

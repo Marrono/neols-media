@@ -317,7 +317,12 @@ def render(data, out_dir):
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     single = len(data["items"]) == 1
-    if single:
+    if single and data.get("theme", "cine") == "cine":
+        import cine
+        pages = cine.card_pages(data)
+        global W, H
+        W, H = cine.CW, cine.CH
+    elif single:
         pages = single_pages(data)
     else:
         pages = [cover(data)] + [item_card(data, i, it) for i, it in enumerate(data["items"])] + [outro(data)]
