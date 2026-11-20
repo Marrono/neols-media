@@ -192,8 +192,8 @@ def collage_cards(d):
                      ".body{position:absolute;left:72px;right:90px;top:640px} ul{list-style:none;margin-top:22px} li{font-size:31px;line-height:1.45;padding:9px 0;display:flex;color:#222}" \
                      f"li:before{{content:'';flex:none;width:13px;height:13px;border-radius:50%;background:{ACCENT};margin:17px 16px 0 0}}" \
                      ".chips{display:flex;flex-wrap:wrap;gap:12px}"
-    body = (_pol(p1, "right:56px;top:200px;width:340px;height:380px;transform:rotate(3deg);padding:14px 14px 40px", cap=False)
-            + cine._chrome(d, k, n, ntag, f"출처 · {esc(it['source'])}" + (f" · 사진 · {esc(p1['credit'])}" if p1 else ""))
+    body = (_pol(p0, "right:56px;top:200px;width:340px;height:380px;transform:rotate(3deg);padding:14px 14px 40px", "background-position:40% 50%", cap=False)
+            + cine._chrome(d, k, n, ntag, f"출처 · {esc(it['source'])}" + (f" · 사진 · {esc(p0['credit'])}" if p0 else ""))
             + f"<div class='k'>NOW · {esc(it['category'])}</div><div class='t'>{esc(it['title'])}</div>"
             + "<div class='body'>"
             + (f"<div style='font-size:28px;font-weight:700;color:#555'>{esc(st['label'])}</div><div style='font-size:120px;font-weight:900;line-height:1.05;margin-bottom:16px'><span class='mk'>{esc(st['value'])}</span></div>" if st else "")
@@ -205,7 +205,8 @@ def collage_cards(d):
     css = POL + ".st{position:absolute;left:560px;top:600px;font-size:96px;font-weight:900;color:#E0321F;border:9px solid #E0321F;padding:0 26px;letter-spacing:.06em;border-radius:12px;transform:rotate(-12deg);mix-blend-mode:multiply}" \
                 ".body{position:absolute;left:72px;right:90px;top:820px} ul{list-style:none;margin-top:16px} li{font-size:29px;line-height:1.5;color:#444;padding:4px 0} li:before{content:'— '}" \
                 f".nw{{position:absolute;left:72px;right:100px;bottom:110px;border-top:1px solid #CFCDC6;padding-top:20px;font-size:30px;line-height:1.5;font-weight:700}} .nw b{{color:{ACCENT}}}"
-    body = (_pol(p0, "left:100px;top:170px;width:700px;height:560px;transform:rotate(-2deg)", SEPIA + ";background-position:30% 65%")
+    pt = ps[1] if len(ps) > 1 else p0
+    body = (_pol(pt, "left:100px;top:170px;width:700px;height:560px;transform:rotate(-2deg)", SEPIA + ";background-position:50% 60%")
             + "<div class='st'>THEN</div>"
             + cine._chrome(d, k, n, f"THEN · {it['then_label']}", f"출처 · {esc(it.get('then_source', it['source']))}")
             + f"<div class='body'><div style='font-size:34px;font-weight:900;color:#E0321F'>{esc(it['then_label'])}</div>"
@@ -265,7 +266,7 @@ def split_reel_html(d):
         f"<div class='bar'><div class='t'><span>{esc(re.sub(r'[+−-]?[0-9.]+%?', '', c[1]).strip())}</span><span>{esc((re.search(r'[+−-]?[0-9.]+%?', c[1]) or [''])[0])}</span></div>"
         f"<div class='tr'><div class='fl' id='f{j}' style='background:{RED if c[0] == 'up' else LIGHT}' data-w='{(_pct(c[1]) or 0) / mx * 100:.1f}'></div></div></div>"
         for j, c in enumerate(chips))
-    pts = "".join(f"<div class='pt'>{esc(p)}</div>" for p in it["points"][:3])
+    pts = "".join(f"<div class='pt'>{esc(p)}</div>" for p in it["points"][:2])
     css = f"""
 .half{{position:absolute;left:0;right:0;overflow:hidden}} #top{{top:0}} #bot{{bottom:0}} .half .ph{{position:absolute;inset:-60px;background-size:cover;background-position:center}}
 .dim{{position:absolute;inset:0}} .lab{{position:absolute;left:80px;font-weight:900}}
@@ -276,7 +277,7 @@ def split_reel_html(d):
 .nf{{position:absolute;left:80px;right:150px}} .nf .k{{font-size:40px;font-weight:700}} .nf .v{{font-size:200px;font-weight:900;line-height:1.05;white-space:nowrap}}
 .bars{{position:absolute;left:80px;right:150px}} .bar{{margin-bottom:28px}} .bar .t{{font-size:40px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}}
 .bar .tr{{height:46px;background:rgba(255,255,255,.18);border-radius:8px;overflow:hidden}} .bar .fl{{height:100%;width:0;border-radius:8px}}
-.pt{{font-size:46px;font-weight:800;line-height:1.35;margin-bottom:22px}}
+.pt{{font-size:40px;font-weight:800;line-height:1.35;margin-bottom:20px}}
 .th{{position:absolute;left:80px;right:150px}} .th .h{{font-size:64px;font-weight:900;line-height:1.3}} .th .s{{font-size:38px;color:#ddd;margin-top:14px;line-height:1.45}}
 .link{{position:absolute;left:80px;right:150px;top:760px;font-size:62px;font-weight:900;line-height:1.38}}
 .brand{{position:absolute;top:150px;right:150px;font-size:40px}} .cr{{position:absolute;left:80px;font-size:24px}}
@@ -343,8 +344,8 @@ body{{background:#F7F6F2;color:#111}}
 <div class="segs"><div><b id="s1"></b></div><div><b id="s2"></b></div><div><b id="s3"></b></div><div><b id="s4"></b></div></div>
 <div class="top"><span>Ne<i>ol</i>s</span><span class="d" id="dd"></span></div>
 {pol(1, p0, 'left:120px;top:290px;width:840px;height:760px')}
-{pol(2, p1, 'left:150px;top:300px;width:800px;height:640px')}
-{pol(3, p0, 'left:110px;top:280px;width:860px;height:780px', SEPIA + ';background-position:30% 70%;background-size:160%')}
+{pol(2, p0, 'left:150px;top:300px;width:800px;height:640px', 'background-size:150%;background-position:60% 40%')}
+{pol(3, ps[1] if len(ps) > 1 else p0, 'left:110px;top:280px;width:860px;height:780px', SEPIA + ';background-position:50% 60%' + ('' if len(ps) > 1 else ';background-size:160%'))}
 <div class="stamp" id="st" style="left:560px;top:860px">THEN</div>
 <div class="abs hook" id="hook">{esc(h[0])}{f"<br><span class='mk' id='mk'>{esc(' '.join(h[1:]))}</span>" if len(h) > 1 else "<span id='mk'></span>"}</div>
 {f"<div class='abs lbl' id='lbl'>{esc(st['label'])}</div><div class='abs big' id='big'>{esc(st['value'])}</div>" if st else f"<div class='abs pts' id='pts'>{pts}</div>"}
