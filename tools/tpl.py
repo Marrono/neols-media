@@ -80,22 +80,24 @@ def split_cards(d):
                                   f"<b style='display:inline-block;font-size:24px;letter-spacing:.12em;padding:4px 14px;border:3px solid currentColor;"
                                   f"border-radius:30px;margin-right:14px;vertical-align:middle'>{word}</b>"
                                   f"<span style='font-size:52px;vertical-align:middle'>{esc(txt)}</span></div>")
-    # 표지
+    # 표지 (C안: 위 칸 = 오늘 문구, 아래 칸 = 그때 문구, 가운데 '그때는 어땠을까?')
+    ans = it.get("reel", {}).get("then_head") or head
     css = f"""
-    .h{{position:absolute;left:0;right:0;overflow:hidden}} .h .bg{{inset:-40px}}
-    .dv{{position:absolute;left:0;right:0;top:671px;height:8px;background:{ACCENT};box-shadow:0 0 26px {ACCENT}}}
-    .hk{{position:absolute;left:50px;right:50px;top:675px;transform:translateY(-50%);text-align:center;font-size:84px;font-weight:900;line-height:1.16;color:#111}}
-    .hk span{{background:#fff;padding:2px 22px;box-decoration-break:clone;-webkit-box-decoration-break:clone}} .hk em{{font-style:normal;color:{RED}}}
+    .h{{position:absolute;left:0;right:0;overflow:hidden}} .h .bg{{position:absolute;inset:-30px;background-size:cover;background-position:center}}
+    .q{{position:absolute;left:72px;right:72px;bottom:70px;color:#fff}}
+    .q .s{{font-size:30px;font-weight:700;color:#ddd}} .q .m{{font-size:78px;font-weight:900;line-height:1.15;margin-top:10px}}
+    .a{{position:absolute;left:72px;right:72px;top:80px;color:#fff}}
+    .a .s{{font-size:30px;font-weight:700;color:#E8E1C8}} .a .m{{font-size:64px;font-weight:900;line-height:1.2;margin-top:10px}}
+    .mid{{position:absolute;left:50%;top:675px;transform:translate(-50%,-50%);background:{ACCENT};color:#fff;font-size:30px;font-weight:900;padding:12px 34px;border-radius:40px;box-shadow:0 0 0 8px rgba(0,0,0,.35);white-space:nowrap}}
     """
-    hk = f"<span>{esc(h[0])}</span>" + (f"<br><span><em>{esc(' '.join(h[1:]))}</em></span>" if len(h) > 1 else "")
-    body = (f"<div class='h' style='top:0;height:675px'><div class='bg' style=\"{bgimg(p0, 'transform:scale(1.05)')}\"></div>"
-            f"<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.1) 45%,rgba(0,0,0,.35))'></div>"
-            + lab("NOW", d["date"][:7], "#fff").replace("class='lb'", "class='lb' style='top:150px'").replace("style='position", "style='top:150px;position")
-            + "</div>"
-            f"<div class='h' style='top:675px;height:675px'><div class='bg' style=\"{bgimg(p0, SEPIA + ';transform:scale(1.25) translateX(30px)')}\"></div>"
-            f"<div style='position:absolute;inset:0;background:rgba(0,0,0,.55)'></div>"
-            + lab("THEN", it["then_label"], "#E8E1C8").replace("style='position", "style='top:420px;position") + "</div>"
-            + "<div class='dv'></div>" + f"<div class='hk'>{hk}</div>"
+    yy, mm = (d["date"].split(".") + ["", ""])[:2]
+    body = (f"<div class='h' style='top:0;height:675px'><div class='bg' style=\"{bgimg(p0)}\"></div>"
+            f"<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),rgba(0,0,0,.05) 40%,rgba(0,0,0,.8))'></div>"
+            f"<div class='q'><div class='s'>{yy}년 {int(mm) if mm.isdigit() else mm}월, 오늘</div><div class='m'>{'<br>'.join(esc(x) for x in h)}</div></div></div>"
+            f"<div class='h' style='top:675px;height:675px'><div class='bg' style=\"{bgimg(p0, SEPIA)}\"></div>"
+            f"<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.8),rgba(0,0,0,.3) 60%,rgba(0,0,0,.6))'></div>"
+            f"<div class='a'><div class='s'>{esc(it['then_label'])}, 그때는</div><div class='m'>{esc(ans)}</div></div></div>"
+            "<div class='mid'>그때는 어땠을까?</div>"
             + cine._chrome(d, k, n, ntag, f"사진 · {esc(p0['credit'])}" if p0 else "", "넘겨서 보기 →"))
     pages.append(_page(css, body)); k += 1
     # 그래픽
@@ -272,8 +274,10 @@ def split_reel_html(d):
 .dim{{position:absolute;inset:0}} .lab{{position:absolute;left:80px;font-weight:900}}
 .lab b{{display:inline-block;font-size:30px;letter-spacing:.12em;padding:6px 18px;border:3px solid currentColor;border-radius:40px;margin-right:18px;vertical-align:middle}} .lab span{{font-size:64px;vertical-align:middle}}
 .dv{{position:absolute;left:0;right:0;height:10px;background:{ACCENT};box-shadow:0 0 30px {ACCENT}}}
-.hook{{position:absolute;left:60px;right:60px;text-align:center;font-size:92px;font-weight:900;line-height:1.15;color:#111}}
-.hook span{{background:#fff;padding:4px 26px;box-decoration-break:clone;-webkit-box-decoration-break:clone}} .hook em{{font-style:normal;color:{RED}}}
+.hook{{position:absolute;left:80px;right:80px;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.5)}}
+.hook .s{{font-size:40px;font-weight:700;color:#ddd}} .hook .m{{font-size:96px;font-weight:900;line-height:1.15;margin-top:12px}}
+.tq{{position:absolute;left:80px;right:80px;top:120px;color:#fff}} .tq .s{{font-size:40px;font-weight:700;color:#E8E1C8}} .tq .m{{font-size:76px;font-weight:900;line-height:1.2;margin-top:12px}}
+.mid{{position:absolute;left:50%;background:{ACCENT};color:#fff;font-size:40px;font-weight:900;padding:16px 44px;border-radius:50px;box-shadow:0 0 0 10px rgba(0,0,0,.35);white-space:nowrap;z-index:5}}
 .nf{{position:absolute;left:80px;right:150px}} .nf .k{{font-size:40px;font-weight:700}} .nf .v{{font-size:200px;font-weight:900;line-height:1.05;white-space:nowrap}}
 .bars{{position:absolute;left:80px;right:150px}} .bar{{margin-bottom:28px}} .bar .t{{font-size:40px;font-weight:700;margin-bottom:10px;display:flex;justify-content:space-between}}
 .bar .tr{{height:46px;background:rgba(255,255,255,.18);border-radius:8px;overflow:hidden}} .bar .fl{{height:100%;width:0;border-radius:8px}}
@@ -288,11 +292,13 @@ def split_reel_html(d):
  <div class="nf" id="nf" style="top:330px">{f"<div class='k'>{esc(st['label'])}</div><div class='v'>{esc(st['value'])}</div>" if st else ''}</div>
  <div class="bars" id="nb" style="top:{640 if st else 330}px">{bars if chips else pts}</div>
  <div class="cr cred" style="top:240px">{('사진 · ' + esc(p0['credit'])) if p0 else ''}</div></div>
-<div class="half" id="bot"><div class="ph" id="pb" style="{img};{SEPIA}"></div><div class="dim" style="background:rgba(0,0,0,.55)"></div>
+<div class="half" id="bot"><div class="ph" id="pbot" style="{img};{SEPIA}"></div><div class="dim" style="background:rgba(0,0,0,.55)"></div>
  <div class="lab" id="lb" style="top:60px;color:#E8E1C8"><b>THEN</b><span>{esc(it['then_label'])}</span></div>
+ <div class="tq" id="tq"><div class="s">{esc(it['then_label'])}, 그때는</div><div class="m">{esc(it.get('reel',{}).get('then_head') or head)}</div></div>
  <div class="th" id="tf" style="top:210px"><div class="h">{esc(head)}</div>{f"<div class='s'>{esc(sub)}</div>" if sub else ''}</div></div>
 <div class="dv" id="dv"></div><div class="brand">Ne<i>ol</i>s</div>
-<div class="hook" id="hook"><span>{esc(h[0])}</span>{f"<br><span><em>{esc(' '.join(h[1:]))}</em></span>" if len(h) > 1 else ''}</div>
+<div class="hook" id="hook"><div class="s">{d['date'][:4]}년 {int(d['date'][5:7])}월, 오늘</div><div class="m">{'<br>'.join(esc(x) for x in h)}</div></div>
+<div class="mid" id="mid">그때는 어땠을까?</div>
 <div class="link" id="link">{esc(it['link'])}</div>
 <div class="cr cred" id="cs" style="bottom:300px;opacity:0">출처 · {esc(it['source'])}</div>
 {_end(d)}"""
@@ -302,13 +308,15 @@ function draw(t){{
  let s=0.5-0.2*E(P(t,7.8,8.4))+0.2*E(P(t,11.7,12.1)); const close=E(P(t,11.9,12.4));
  const th=1920*s*(1-close), bh=1920*(1-s)*(1-close);
  $('#top').style.height=th+'px';$('#bot').style.height=bh+'px';$('#dv').style.top=(th-5)+'px';$('#dv').style.opacity=1-close;
- $('#pt').style.transform=`scale(${{1.05+0.12*t/15}})`;$('#pb').style.transform=`scale(${{1.2-0.1*t/15}}) translateX(${{20*t/15}}px)`;
- const h=BK(P(t,-.25,.3)),ho=P(t,2.8,3.1);set('#hook',1-ho,`translateY(-50%) scale(${{.7+.3*h}})`);$('#hook').style.top=th+'px';
+ $('#pt').style.transform=`scale(${{1.05+0.12*t/15}})`;$('#pbot').style.transform=`scale(${{1.2-0.1*t/15}}) translateX(${{20*t/15}}px)`;
+ const h=E(P(t,-.3,.25)),ho=P(t,2.8,3.1);set('#hook',1-ho,`translateY(calc(-100% - 90px + ${{(1-h)*30}}px))`);$('#hook').style.top=th+'px';
+ const mq=E(P(t,.5,.9));set('#mid',mq*(1-ho),`translate(-50%,-50%) scale(${{.8+.2*mq}})`);$('#mid').style.top=th+'px';
+ const tq=E(P(t,.9,1.4));set('#tq',tq*(1-ho),`translateY(${{(1-tq)*30}}px)`);
  const nI=E(P(t,3.0,3.4)),nO=1-P(t,7.6,7.9);set('#nf',nI*nO,`translateY(${{(1-nI)*40}}px)`);set('#nb',P(t,3.5,3.8)*nO,'none');
  for(let j=0;j<NB;j++){{const f=$('#f'+j);f.style.width=(E(P(t,3.8+j*.4,4.6+j*.4))*f.dataset.w)+'%'}}
  document.querySelectorAll('#nb .pt').forEach((p,i)=>{{const a=E(P(t,3.6+i*.5,4.0+i*.5));p.style.opacity=a;p.style.transform=`translateX(${{(1-a)*-80}}px)`}});
  $('#dt').style.background=`linear-gradient(180deg,rgba(0,0,0,${{.45+.4*P(t,7.8,8.3)}}),rgba(0,0,0,${{.2+.6*P(t,7.8,8.3)}}) 40%,rgba(0,0,0,.6))`;
- set('#lb',.35+.65*P(t,7.9,8.3),`translateY(${{(1-E(P(t,7.9,8.4)))*20}}px)`);
+ set('#lb',P(t,7.9,8.3),`translateY(${{(1-E(P(t,7.9,8.4)))*20}}px)`);
  const tf=E(P(t,8.4,8.9));set('#tf',tf,`translateY(${{(1-tf)*40}}px)`);
  const lk=win(t,12.2,13.4,.3,.3);set('#link',lk,`translateY(${{(1-E(P(t,12.2,12.6)))*40}}px)`);set('#cs',lk,'none');
  const en=E(P(t,13.3,13.7));set('#end',en,`translateY(${{(1-en)*80}}px)`);
