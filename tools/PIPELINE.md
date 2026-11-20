@@ -91,16 +91,10 @@
 - 결과를 candidates에 factCheck {status:"ok"|"fix"|"fail", checkedAt, notes:"확인된 사실 · 고칠 점"}로 기록(이미 factCheck 있으면 건너뜀). 틀린 내용은 summary/then도 고침.
 - 제작 시 factCheck 메모를 그대로 사용.
 
-## 0. 실행 방식 (2026-11-21 개편: 별도 예약 작업)
-- 5분 점검은 대화가 아니라 **별도 예약 작업 'Neols 5분 점검'(5분마다, 푸시 끔)**이 매번 새 세션에서 실행. send_later로 대화에 재예약하지 않음.
-- 새 세션 준비: add_repo(Marrono/neols-media, push) → `git clone` → 작업 폴더 = 클론/tools (스크립트·json·PIPELINE.md). 사진 보관함 = 클론/photos.
-  렌더 결과물은 클론/<날짜-id>/ 에 저장 후 commit·push. 사이트 원본은 tools/site_index.html.
-- 겹침 방지: 시작할 때 meta/status.lastRun이 4분 이내면 다른 실행이 돌고 있는 것으로 보고 바로 끝냄. 시작 즉시 lastRun 갱신.
-
 ## C. 마무리
 - **중복 예약 방지**: 다음 회차를 예약하기 전에 meta/status.nextRun을 확인해서, 이미 지금보다 미래 시각이면(다른 회차가 예약해 둔 것) 새로 예약하지 않음. 예약할 때는 nextRun을 먼저 갱신.
 - meta/status lastRun·nextRun 갱신(ifVersion).
-- (예전) 다음 회차 send_later 재예약 — **별도 예약 작업으로 옮긴 뒤로는 하지 않음**. nextRun은 다음 5분 슬롯으로만 기록.
+- 다음 회차 send_later: **24시간 쉬지 않고 5분 뒤**(:00/:05/:10 … 5분 단위). 밤에도 동일. (별도 예약 작업은 최소 1시간 주기라 사용자 결정으로 이 대화에서 계속, 2026-11-21. 앱 알림은 사용자가 앱 설정에서 끔)
 - 매 회차: A(15분 지난 제작 대기)·A2(사실 확인)·photoPending·meta/request·B(탐색) 모두 확인. 할 일이 없으면 조용히 끝냄.
 - **5분 점검은 푸시 알림을 띄우지 않음 (2026-11-21 사용자 결정).** SendUserMessage·PushNotification 쓰지 않고, 점검 회차의 최종 답은 아주 짧은 한 줄로만 남김. 새 후보·초안은 사이트에 반영되는 것으로 충분.
 - (예전 규칙, 참고) 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
