@@ -167,7 +167,7 @@ function draftHTML(d){
   let bottom;
   const canAuto = mcp && (d.kind==='reel' ? !!d.publicVideo : (d.publicImages||[]).length>=2);
   if (st === 'pending' && busyId===d.id) {
-    bottom = `<div class="decided"><span><b>인스타그램에 올리는 중…</b> 창을 닫지 말아주세요 (영상은 1분 넘게 걸릴 수 있어요)</span></div>`;
+    bottom = `<div class="decided"><span><b>인스타그램에 올리는 중…</b> 창을 닫지 말아주세요 · <b id="pubCd">${cdText()}</b></span></div>`;
   } else if (st === 'pending' && confirmId===d.id) {
     bottom = `<div class="note"><div style="font-size:14px;line-height:1.6;margin-bottom:10px">
         ${canAuto ? `<b>${IG_HANDLE}</b>에 이 ${d.kind==='reel'?'릴스':'카드뉴스'}를 지금 올릴까요?<br><span style="color:#8A8A85">캡션·해시태그가 함께 올라가요. 올린 뒤에는 인스타 앱에서만 지울 수 있어요.</span>`
@@ -283,8 +283,20 @@ async function setStatus(id, status, note){
   catch(e){ toast('저장하지 못했어요. 다시 눌러주세요.'); }
 }
 
+// ── 게시 남은 시간 카운트다운 (예상치: 카드 장수·영상 여부로 계산) ──
+let busyStart = 0, busyEst = 0, cdTimer = null;
+function cdText(){
+  const left = Math.ceil((busyStart + busyEst*1000 - Date.now())/1000);
+  return left > 0 ? `약 ${left}초 남았어요` : '거의 다 됐어요…';
+}
+function startCountdown(d){
+  busyStart = Date.now();
+  busyEst = d.kind === 'reel' ? 75 : Math.max(15, 8 + 3*((d.publicImages||[]).length));
+  clearInterval(cdTimer);
+  cdTimer = setInterval(() => { const el = document.getElementById('pubCd'); if (el) el.textContent = cdText(); if (!busyId) clearInterval(cdTimer); }, 1000);
+}
 async function publish(d){
-  busyId = d.id; confirmId = null; delete errMsg[d.id]; render();
+  busyId = d.id; confirmId = null; delete errMsg[d.id]; startCountdown(d); render();
   const caption = [d.caption, (d.hashtags||[]).join(' ')].filter(Boolean).join('\n\n').slice(0, 2200);
   const input = d.kind === 'reel'
     ? { connector:'instagram', action:'create_video_post', account:IG_ACCOUNT,
