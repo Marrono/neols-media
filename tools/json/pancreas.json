@@ -1,0 +1,51 @@
+{
+ "date": "2026.11.21", "weekday": "토", "handle": "@neols.news", "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [{
+  "category": "과학·건강", "template": "cine",
+  "title": "생존기간 2배,\n먹는 췌장암 신약",
+  "points": [
+   "하루 한 번 먹는 췌장암 신약 후보 '다락손라십'이 3상 임상에서 효과를 보였어요",
+   "전이성 췌장암 환자 약 500명 중 이 약을 먹은 쪽의 생존기간 중앙값은 13.2개월, 화학요법은 6.7개월이었어요",
+   "연구진은 완치제는 아니지만 치료에서 크게 한 걸음 나아간 것이라고 했어요"
+  ],
+  "then_label": "1996년",
+  "then": "췌장암 항암제 젬시타빈이 승인됐어요. 그 뒤 30년 가까이 췌장암 치료는 항암화학요법 중심이었어요.",
+  "then_points": [
+   "그래서 췌장암은 '항암제의 무덤'으로 불려 왔어요",
+   "이번 약은 화학요법보다 확실히 나은 효과를 보인 첫 약이라는 평가를 받아요"
+  ],
+  "link": "30년 동안 못 뚫었던 '항암제의 무덤'에 금이 갔어요.",
+  "source": "AP(뉴시스 2026.5.31) · 한국경제 · 메디칼타임즈 · 코메디닷컴",
+  "then_source": "한국경제(2026.6.29) · 보도 종합",
+  "photos": [
+   {"path": "/home/claude/cardnews/ph/Histopathology_of_pancreatic_adenocarcinoma_with_treatment_effect.jpg", "credit": "Mikael Häggström / Wikimedia Commons / CC0"}
+  ],
+  "photo": {"path": "/home/claude/cardnews/ph/Histopathology_of_pancreatic_adenocarcinoma_with_treatment_effect.jpg", "credit": "Mikael Häggström / Wikimedia Commons / CC0"},
+  "visuals": [
+   {"type": "bars", "title": "전체 생존기간 중앙값", "data": [["화학요법", 6.7], ["다락손라십", 13.2]], "fmt": "{}개월", "source": "RASolute 302 3상(NEJM·ASCO 2026, 뉴시스 인용)"},
+   {"type": "big", "title": "사망 위험", "value": "60%↓", "label": "화학요법과 비교했을 때", "sub": "위험비 0.40", "source": "코메디닷컴(2026.10.24)"}
+  ],
+  "reel": {
+   "hook": "'항암제의 무덤'\n췌장암에 금이 갔다",
+   "stat": {"label": "생존기간 중앙값", "value": "13.2개월"},
+   "chips": [["up", "화학요법 6.7개월의 약 2배"], ["down", "사망 위험 60% 낮춰"]],
+   "then_head": "1996년, 젬시타빈 승인",
+   "then_sub": "그 뒤 30년 가까이 췌장암 치료는\n항암화학요법 중심이었어요"
+  },
+  "explain": {
+   "title": "생존기간 '중앙값'이\n뭐예요?",
+   "lines": [
+    "환자의 절반이 그 시점까지 살아 있었다는 뜻이에요",
+    "13.2개월이면 절반이 1년 넘게 살았다는 거예요",
+    "모든 환자가 똑같이 효과를 보는 건 아니에요"
+   ]
+  },
+  "asides": [{
+   "kicker": "여담", "title": "KRAS가\n뭐예요?",
+   "lines": [
+    "1982년 사람 암세포에서 처음 발견된, 암세포에 '계속 자라라'고 명령하는 성장 엔진이에요",
+    "췌장암 환자 90% 이상에서 변이가 있지만, 표면이 매끈해 40년 넘게 약을 붙이기 어려웠어요"
+   ]
+  }]
+ }]
+}
