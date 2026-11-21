@@ -1,0 +1,52 @@
+{
+ "date": "2026.11.21", "weekday": "토", "handle": "@neols.news", "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [{
+  "category": "문화·게임", "template": "collage",
+  "title": "13년 만의 GTA6\n드디어 출시",
+  "points": [
+   "11월 19일 GTA6가 PS5·Xbox Series X|S로 나왔어요, 전작 이후 13년 만이에요",
+   "출시 전 디지털 사전예약만 약 771만 장, 7억 5천만 달러어치로 추산돼요",
+   "PC 버전은 아직 출시 일정이 나오지 않았어요"
+  ],
+  "then_label": "2013.09",
+  "then": "GTA5가 출시 사흘 만에 매출 10억 달러를 넘겼어요. 당시 엔터테인먼트 사상 가장 빠른 기록이었어요.",
+  "then_points": [
+   "PS3·Xbox 360으로 처음 나왔어요",
+   "2018년엔 역대 가장 돈을 많이 번 엔터테인먼트 상품이 됐어요"
+  ],
+  "link": "13년을 기다린 게임, 그때도 세상이 멈췄어요.",
+  "source": "센서타워(위키트리·디지털투데이) · 일간스포츠 · 코리아헤럴드",
+  "then_source": "기네스 세계기록 · GameRant",
+  "photos": [
+   {"path": "/home/claude/cardnews/ph/Hands_holding_video_game_controller_50811892858_.jpg", "credit": "Vu Hoang / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"},
+   {"path": "/home/claude/cardnews/ph/Xbox-360-Wireless-Controller-White.jpg", "credit": "Evan-Amos / Wikimedia Commons / Public domain"}
+  ],
+  "photo": {"path": "/home/claude/cardnews/ph/Hands_holding_video_game_controller_50811892858_.jpg", "credit": "Vu Hoang / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"},
+  "visuals": [
+   {"type": "big", "title": "출시 전부터 기록", "value": "771만 장", "label": "디지털 사전예약", "sub": "센서타워 추산 · 11월 1일 기준", "source": "센서타워(위키트리 인용)"},
+   {"type": "timeline", "title": "GTA6가 나오기까지", "data": [["2013.9", "GTA5 출시"], ["2023.12", "GTA6 첫 예고편 공개"], ["2026.6", "사전예약 시작"], ["2026.11.19", "GTA6 출시"]], "source": "록스타게임즈 · 보도 종합"}
+  ],
+  "reel": {
+   "hook": "13년 기다린 게임,\n드디어 나왔다",
+   "stat": {"label": "출시 전 디지털 사전예약", "value": "771만 장"},
+   "chips": [["up", "약 7억 5천만 달러"], ["up", "전작 이후 13년 만"]],
+   "then_head": "2013년, 사흘 만에 10억 달러",
+   "then_sub": "GTA5가 엔터테인먼트 사상\n가장 빠른 기록을 세웠어요"
+  },
+  "explain": {
+   "title": "왜 이렇게\n난리예요?",
+   "lines": [
+    "GTA는 가상의 미국 도시를 자유롭게 누비는 게임 시리즈예요",
+    "전작이 2013년에 나온 뒤 13년 동안 후속작이 없었어요",
+    "출시가 몇 번 미뤄지면서 기대가 더 커졌어요"
+   ]
+  },
+  "asides": [{
+   "kicker": "여담", "title": "사운드트랙에\n제니도?",
+   "lines": [
+    "공식 앨범 34곡 중 제니의 '파워 트립'이 들어간 것으로 알려졌어요",
+    "유출된 곡 목록 기준이라 록스타의 공식 발표는 아직 없어요"
+   ]
+  }]
+ }]
+}
