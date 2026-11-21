@@ -1,0 +1,52 @@
+{
+ "date": "2026.11.21", "weekday": "토", "handle": "@neols.news", "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [{
+  "category": "경제·생활", "template": "split",
+  "title": "홈플러스 직원,\n8월 월급도 덜 받았다",
+  "points": [
+   "11월 18일 8월분 밀린 급여 25%를 더 줘서, 8월분은 75%까지만 지급됐어요",
+   "남은 25%와 9월분, 10월분 급여, 추석 상여금은 아직 지급일이 정해지지 않았어요",
+   "일부 점포는 전기요금이 밀려 단전 통보까지 받았어요"
+  ],
+  "then_label": "2025.03",
+  "then": "홈플러스가 기업회생 절차를 신청했어요. 대형마트 2위의 긴 위기가 시작됐어요.",
+  "then_points": [
+   "2025년 12월부터 매달 급여 일부가 밀리기 시작했어요",
+   "올해 7월 법원의 회생절차 폐지 결정 뒤, 9월 회생계획 인가로 영업을 이어가고 있어요"
+  ],
+  "link": "회생 신청 뒤 1년 8개월, 월급날이 멈췄어요.",
+  "source": "연합뉴스(2026.11.18) · SBS Biz(2026.9.17, 11.6) · 머니투데이방송(2026.10.16)",
+  "then_source": "SBS Biz(2026.7.8) · 보도 종합",
+  "photos": [
+   {"path": "/home/claude/cardnews/ph/Yatap_HomePlus_-_panoramio.jpg", "credit": "Seongrae Kim / Wikimedia Commons / CC BY 3.0 · 잘라서·일부 흐리게 사용"},
+   {"path": "/home/claude/cardnews/ph/Empty-Shelves-P1630832.jpg", "credit": "citytransportinfo / Wikimedia Commons / CC0"}
+  ],
+  "photo": {"path": "/home/claude/cardnews/ph/Yatap_HomePlus_-_panoramio.jpg", "credit": "Seongrae Kim / Wikimedia Commons / CC BY 3.0 · 잘라서·일부 흐리게 사용"},
+  "visuals": [
+   {"type": "bars", "title": "8월분 급여, 얼마나 받았나", "data": [["지급", 75], ["아직", 25]], "fmt": "{}%", "highlight": 1, "source": "마트노조 홈플러스지부(연합뉴스 2026.11.18)"},
+   {"type": "big", "title": "총 체불 임금", "value": "3,871억", "label": "원, 역대 1위 규모", "sub": "2026년 9월 국회의원실 자료 기준", "source": "SBS Biz(2026.9.17)"}
+  ],
+  "reel": {
+   "hook": "11월인데\n8월 월급도 덜 받았다",
+   "stat": {"label": "8월분 급여 지급률", "value": "75%"},
+   "chips": [["down", "9·10월 급여 미지급"], ["down", "추석 상여금도 밀려"]],
+   "then_head": "회생 신청",
+   "then_sub": "대형마트 2위 홈플러스의\n긴 위기가 이때 시작됐어요"
+  },
+  "explain": {
+   "title": "기업회생이\n뭐예요?",
+   "lines": [
+    "빚을 갚기 어려운 회사가 법원 관리 아래 다시 살아날 길을 찾는 절차예요",
+    "빚 일부를 줄이거나 미루면서 영업은 계속해요",
+    "그 사이에도 돈이 모자라면 월급·납품대금이 밀릴 수 있어요"
+   ]
+  },
+  "asides": [{
+   "kicker": "여담", "title": "밀린 월급,\n어떻게 받아요?",
+   "lines": [
+    "고용노동부에 임금 체불 진정을 낼 수 있어요",
+    "홈플러스 전담 TF가 있지만 사건을 맡는 인력은 1명뿐이라는 보도도 나왔어요"
+   ]
+  }]
+ }]
+}
