@@ -1,0 +1,52 @@
+{
+ "date": "2026.11.21", "weekday": "토", "handle": "@neols.news", "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [{
+  "category": "건강·생활", "template": "cine",
+  "title": "독감 입원환자\n작년의 2배",
+  "points": [
+   "이번 독감은 9월 초 시작됐다가 10월에 주춤한 뒤 다시 늘고 있어요",
+   "44주차(10/25~31) 입원환자는 461명, 작년 같은 주 174명의 2배가 넘어요",
+   "입원환자의 64.9%가 65세 이상이고, 외래 의심환자는 7~12세가 가장 많아요"
+  ],
+  "then_label": "2024.12",
+  "then": "독감 의심환자가 외래환자 1000명당 73.9명까지 늘었어요. 2016년 이후 8년 만의 최대 유행이었어요.",
+  "then_points": [
+   "그해엔 12월 말에 유행이 정점을 찍었어요",
+   "올해는 9월 초부터 유행이 시작돼 훨씬 빨라요"
+  ],
+  "link": "2년 전 겨울 큰 유행, 올해는 더 일찍 시작됐어요.",
+  "source": "질병관리청(정책브리핑 2026.11.6)",
+  "then_source": "질병관리청(세계일보 2025.1.6)",
+  "photos": [
+   {"path": "/home/claude/cardnews/ph/Influenza_Vaccine_51551576704_.jpg", "credit": "Pete from Liverpool, UK / Wikimedia Commons / CC0"},
+   {"path": "/home/claude/cardnews/ph/Flu_vaccine_vial_2021_A.jpg", "credit": "Prefeitura Campinas / Wikimedia Commons / Public domain"}
+  ],
+  "photo": {"path": "/home/claude/cardnews/ph/Influenza_Vaccine_51551576704_.jpg", "credit": "Pete from Liverpool, UK / Wikimedia Commons / CC0"},
+  "visuals": [
+   {"type": "bars", "title": "44주차 독감 입원환자", "data": [["작년", 174], ["올해", 461]], "fmt": "{}명", "source": "질병관리청 병원급 표본감시(2026.11.6)"},
+   {"type": "bars", "title": "외래 1000명당 의심환자", "data": [["41주", 21.6], ["42주", 17.7], ["43주", 19.2], ["44주", 22.8]], "fmt": "{}명", "source": "질병관리청 의원급 표본감시(2026.11.6)"}
+  ],
+  "reel": {
+   "hook": "벌써 독감?\n입원 2배",
+   "stat": {"label": "44주차 독감 입원환자", "value": "461명"},
+   "chips": [["up", "작년 같은 주 174명"], ["up", "65세 이상 64.9%"]],
+   "then_head": "2024년, 8년 만의 대유행",
+   "then_sub": "12월 말 의심환자가 1000명당 73.9명,\n2016년 이후 가장 많았어요"
+  },
+  "explain": {
+   "title": "'의사환자'가\n뭐예요?",
+   "lines": [
+    "38℃ 넘는 열에 기침이나 목 아픔이 있는 환자예요",
+    "의원 외래환자 1000명 중 몇 명인지로 유행을 재요",
+    "확진자가 아니라 독감이 의심되는 환자 수예요"
+   ]
+  },
+  "asides": [{
+   "kicker": "여담", "title": "한 번 걸렸는데\n또 걸려요?",
+   "lines": [
+    "독감 바이러스는 종류가 여러 가지예요",
+    "이번 절기에 걸렸어도 다른 종류에 다시 걸릴 수 있다고 질병청은 설명해요"
+   ]
+  }]
+ }]
+}
