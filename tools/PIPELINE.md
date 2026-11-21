@@ -66,7 +66,7 @@
    images/video, publicImages 또는 publicVideo+publicCover, caption, hashtags 최대 5개: #Neols #오늘의뉴스 + 주제 3개).
 6. 해당 candidate → status:"made", draftIds.
 
-## B. 인기 급상승 소재 감지 (2026-11-21 개편: **5분마다 매 회차**)
+## B. 인기 급상승 소재 감지 (매 회차, 15분 간격)
 - 탐색 묶음: meta/searchRound {n, found, pool:[{title, summary, then, then_label, category, sources, score, reason}], startedAt}.
   매 회차 n+1. 쓸 만한 새 소재를 후보로 올리면 found+1. 못 올린 것 중 그나마 나은 소재(검증 가능한 THEN이 있는 국내 이슈)는 pool에 점수와 함께 저장.
   **n이 10이 되면**: found가 2개 이하면 pool에서 점수 높은 순으로 **2개**를 후보로 등록(batchLabel "… 그나마 괜찮은 소재"), 그다음 n·found·pool 초기화.
@@ -92,10 +92,15 @@
 - 결과를 candidates에 factCheck {status:"ok"|"fix"|"fail", checkedAt, notes:"확인된 사실 · 고칠 점"}로 기록(이미 factCheck 있으면 건너뜀). 틀린 내용은 summary/then도 고침.
 - 제작 시 factCheck 메모를 그대로 사용.
 
+## 사용량 절약 원칙 (2026-11-21 사용자 결정)
+- **가벼운 점검:** 제작 대기가 없고 meta/request도 없으면 `python3 naver_rank.py`(자주 나온 단어 + '내 정보·내 돈' 키워드 grep)만 보고 끝냄. WebSearch·사실 확인은 실제로 후보로 올릴 소재가 생겼을 때만. DB는 candidates(status selected)·meta/request·meta/searchRound·meta/status만 읽고 씀.
+- **미리보기 확인 최소화:** 렌더 후 이미지는 표지(card_01) 1장만 열어 확인. 시트·릴스 프레임은 열지 않음(문제가 의심될 때만). 릴스는 ffprobe로 25초인지만 확인.
+- **답은 짧게:** 점검 회차 최종 답은 한 줄.
+
 ## C. 마무리
 - **중복 예약 방지**: 다음 회차를 예약하기 전에 meta/status.nextRun을 확인해서, 이미 지금보다 미래 시각이면(다른 회차가 예약해 둔 것) 새로 예약하지 않음. 예약할 때는 nextRun을 먼저 갱신.
 - meta/status lastRun·nextRun 갱신(ifVersion).
-- 다음 회차 send_later: **24시간 쉬지 않고 5분 뒤**(:00/:05/:10 … 5분 단위). 밤에도 동일. (별도 예약 작업은 최소 1시간 주기라 사용자 결정으로 이 대화에서 계속, 2026-11-21. 앱 알림은 사용자가 앱 설정에서 끔)
+- 다음 회차 send_later: **15분 뒤**(:00/:15/:30/:45), **밤 01:00~06:59 KST는 쉬고 07:00에 재개** (2026-11-21 사용자 결정, 사용량 절약. 예전 5분·24시간). (별도 예약 작업은 최소 1시간 주기라 사용자 결정으로 이 대화에서 계속, 2026-11-21. 앱 알림은 사용자가 앱 설정에서 끔)
 - 매 회차: A(15분 지난 제작 대기)·A2(사실 확인)·photoPending·meta/request·B(탐색) 모두 확인. 할 일이 없으면 조용히 끝냄.
 - **5분 점검은 푸시 알림을 띄우지 않음 (2026-11-21 사용자 결정).** SendUserMessage·PushNotification 쓰지 않고, 점검 회차의 최종 답은 아주 짧은 한 줄로만 남김. 새 후보·초안은 사이트에 반영되는 것으로 충분.
 - (예전 규칙, 참고) 새 급상승 후보나 새 초안이 생겼을 때만 SendUserMessage 한 줄 알림(무엇이 왜 떴는지).
