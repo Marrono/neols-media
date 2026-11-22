@@ -394,7 +394,7 @@ def make_reel(d, out_mp4, frames=None, cover=None):
         pg = br.new_page(viewport={"width": RW, "height": RH})
         import tpl
         pg.set_content(tpl.reel_html25(d)); pg.wait_for_timeout(500)
-        dur = float(d.get("reel_sec", tpl.REEL_DUR))
+        dur = max(35.0, float(d.get("reel_sec", 35)))
         if cover:  # 릴스 표지: 훅 문장이 다 나온 순간
             pg.evaluate("draw25(1.4)"); pg.screenshot(path=cover, type="jpeg", quality=92)
         if frames:

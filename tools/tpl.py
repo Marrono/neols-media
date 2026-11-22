@@ -420,9 +420,11 @@ def _img_stat(d, it, ps, light):
            + (f"<span style='background:linear-gradient(transparent 58%,#C9D4FF 58%)'>{esc(st['value'])}</span>" if light else esc(st['value'])) + "</div>"
            if st else f"<div style='font-size:62px;font-weight:900;line-height:1.3'>{esc(it['points'][0])}</div>")
     big += f"<div style='display:flex;flex-wrap:wrap;gap:12px;margin-top:22px'>{chips}</div>" if chips else ""
+    if it.get("story2"):
+        big += f"<div style='font-size:36px;font-weight:700;line-height:1.45;margin-top:26px;opacity:.95'>{esc(it['story2'])}</div>"
     if light:
         css = POL + ".b{position:absolute;left:72px;right:90px;bottom:120px}"
-        body = (_pol(ph, "left:90px;top:170px;width:900px;height:700px;transform:rotate(2deg)", "background-position:50% 45%")
+        body = (_pol(ph, f"left:90px;top:170px;width:900px;height:{560 if it.get('story2') else 700}px;transform:rotate(2deg)", "background-position:50% 45%")
                 + cine._chrome(d, 1, 6, f"NOW · {d['date']}", "") + f"<div class='b'>{big}</div>")
         return _page(css, body, True)
     css = ".b{position:absolute;left:72px;right:90px;bottom:120px}"
@@ -436,20 +438,23 @@ def _img_then(d, it, ps, light):
     ty = year_of(it["then_label"]); head, _ = then_parts(it)
     pt = (ps[1] if (light and len(ps) > 1) else ps[0]) if ps else None
     if light:
-        css = POL + ".st{position:absolute;left:600px;top:640px;font-size:96px;font-weight:900;color:#E0321F;border:9px solid #E0321F;padding:0 26px;letter-spacing:.06em;border-radius:12px;transform:rotate(-12deg);mix-blend-mode:multiply}" \
+        css = POL + ".st{position:absolute;left:600px;top:" + ("560" if it.get("story3") else "640") + "px;font-size:96px;font-weight:900;color:#E0321F;border:9px solid #E0321F;padding:0 26px;letter-spacing:.06em;border-radius:12px;transform:rotate(-12deg);mix-blend-mode:multiply}" \
                     ".b{position:absolute;left:72px;right:90px;bottom:120px}"
-        body = (_pol(pt, "left:90px;top:170px;width:860px;height:660px;transform:rotate(-2deg)", SEPIA + ";background-position:50% 55%")
+        body = (_pol(pt, f"left:90px;top:170px;width:860px;height:{580 if it.get('story3') else 660}px;transform:rotate(-2deg)", SEPIA + ";background-position:50% 55%")
                 + "<div class='st'>THEN</div>" + cine._chrome(d, 2, 6, f"THEN · {it['then_label']}", "")
                 + f"<div class='b'><div style='font-size:150px;font-weight:900;color:#E0321F;line-height:1'>{ty or esc(it['then_label'])}</div>"
-                + f"<div style='font-size:52px;font-weight:900;margin-top:16px;line-height:1.25'>{esc(head)}</div></div>")
+                + f"<div style='font-size:52px;font-weight:900;margin-top:16px;line-height:1.25'>{esc(head)}</div>"
+                + (f"<div style='font-size:36px;font-weight:700;margin-top:22px;line-height:1.45;color:#333'>{esc(it['story3'])}</div>" if it.get("story3") else "")
+                + "</div>")
         return _page(css, body, True)
-    css = (".st{position:absolute;left:72px;bottom:470px;font-size:56px;font-weight:900;letter-spacing:.06em;border:5px solid #fff;padding:0 22px}"
+    css = (".st{display:inline-block;margin-bottom:18px;font-size:56px;font-weight:900;letter-spacing:.06em;border:5px solid #fff;padding:0 22px}"
            ".b{position:absolute;left:66px;right:90px;bottom:120px}")
     body = (cine._bg(pt, SEPIA + ";transform:scale(1.15)") + "<div class='shade'></div>" + cine.GRAIN
             + cine._chrome(d, 2, 6, f"THEN · {it['then_label']}", f"사진 · {esc(pt['credit'])}" if pt else "")
-            + "<div class='st'>THEN</div>"
-            + f"<div class='b'><div style='font-size:220px;font-weight:900;line-height:1;letter-spacing:-0.03em'>{ty or esc(it['then_label'])}</div>"
-            + f"<div style='font-size:54px;font-weight:900;margin-top:14px;line-height:1.25'>{esc(head)}</div></div>")
+            + f"<div class='b'><div class='st'>THEN</div><div style='font-size:220px;font-weight:900;line-height:1;letter-spacing:-0.03em'>{ty or esc(it['then_label'])}</div>"
+            + f"<div style='font-size:54px;font-weight:900;margin-top:14px;line-height:1.25'>{esc(head)}</div>"
+            + (f"<div style='font-size:36px;font-weight:700;margin-top:22px;line-height:1.45;opacity:.95'>{esc(it['story3'])}</div>" if it.get("story3") else "")
+            + "</div>")
     return cine._page(css, body)
 
 
@@ -478,7 +483,7 @@ def card_pages6(d):
             aside_pages.append(pg[-2])
         else:
             aside_pages.append(cine.c_extra(d, it, a, ps, 0, 6))
-    MAXC = int(d.get("max_cards", 8))
+    MAXC = int(d.get("max_cards", 9))
     while 5 + len(aside_pages) + len(visuals) + 1 > MAXC and len(aside_pages) > 1:
         aside_pages.pop()
     keep_then = True
@@ -517,9 +522,9 @@ def _overlay(d, it, light):
                           f"<span style='color:{acc}'>—</span> {esc(l)}</div>" for l in ls)
                 + "</div></div>")
     out = layer(0, "쉽게 말하면", ex.get("title", ""), lines)
-    al = (it.get("asides") or it.get("extras") or [a])[:max(1, int(d.get("reel_asides", 1)))]
+    al = (it.get("asides") or it.get("extras") or [a])[:max(1, int(d.get("reel_asides", 2)))]
     for k, aa in enumerate(al):
-        out += layer(k + 1, aa.get("kicker", "여담"), aa.get("title", ""), aa.get("lines", [])[:2])
+        out += layer(k + 1, aa.get("kicker", "여담"), aa.get("title", ""), aa.get("lines", [])[:3])
     return out
 
 
@@ -527,7 +532,7 @@ def reel_html25(d):
     t = pick(d); it = d["items"][0]
     html_ = reel_html(d)
     A, B = INS[t]
-    dur = float(d.get("reel_sec", REEL_DUR)); na = max(1, int(d.get("reel_asides", 1)))
+    dur = max(35.0, float(d.get("reel_sec", 35))); na = max(1, int(d.get("reel_asides", 2)))
     extra = dur - REEL_DUR
     EL = EXP_LEN + extra * 0.4 if na > 1 else EXP_LEN + extra / 2
     AL = (dur - 15.0 - EL) / na
