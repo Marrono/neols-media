@@ -534,5 +534,37 @@
    "마스크",
    "호흡기"
   ]
+ },
+ {
+  "file": "_2.jpg",
+  "title": "File:Пекинская капуста во Владивостокском продуктовом магазине 2.jpg",
+  "credit": "Svetlov Artem / Wikimedia Commons / CC0",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Пекинская_капуста_во_Владивостокском_продуктовом_магазине_2.jpg",
+  "tags": [
+   "배추"
+  ]
+ },
+ {
+  "file": "Korean_fried_chicken_in_Korea.jpg",
+  "title": "File:Korean fried chicken in Korea.jpg",
+  "credit": "Startandstar / Wikimedia Commons / CC0",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Korean_fried_chicken_in_Korea.jpg",
+  "tags": [
+   "치킨",
+   "배달"
+  ]
+ },
+ {
+  "file": "Yangnyeom_Chicken_Korean_fried_chicken.jpg",
+  "title": "File:Yangnyeom Chicken Korean fried chicken.jpg",
+  "credit": "Startandstar / Wikimedia Commons / CC0",
+  "license": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Yangnyeom_Chicken_Korean_fried_chicken.jpg",
+  "tags": [
+   "치킨",
+   "양념"
+  ]
  }
 ]
