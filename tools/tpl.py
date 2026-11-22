@@ -478,10 +478,11 @@ def card_pages6(d):
             aside_pages.append(pg[-2])
         else:
             aside_pages.append(cine.c_extra(d, it, a, ps, 0, 6))
-    while 5 + len(aside_pages) + len(visuals) + 1 > 8 and len(aside_pages) > 1:
+    MAXC = int(d.get("max_cards", 8))
+    while 5 + len(aside_pages) + len(visuals) + 1 > MAXC and len(aside_pages) > 1:
         aside_pages.pop()
     keep_then = True
-    while 5 + len(aside_pages) + len(visuals) + int(keep_then) > 8:
+    while 5 + len(aside_pages) + len(visuals) + int(keep_then) > MAXC:
         if len(visuals) > 1: visuals.pop()
         elif keep_then: keep_then = False
         else: visuals.pop()
@@ -515,22 +516,30 @@ def _overlay(d, it, light):
                 + "".join(f"<div class='ol' style='font-size:50px;font-weight:800;line-height:1.38;margin-top:34px;color:{fg};opacity:0'>"
                           f"<span style='color:{acc}'>—</span> {esc(l)}</div>" for l in ls)
                 + "</div></div>")
-    return layer(0, "쉽게 말하면", ex.get("title", ""), lines) + layer(1, "여담", a.get("title", ""), a.get("lines", [])[:2])
+    out = layer(0, "쉽게 말하면", ex.get("title", ""), lines)
+    al = (it.get("asides") or it.get("extras") or [a])[:max(1, int(d.get("reel_asides", 1)))]
+    for k, aa in enumerate(al):
+        out += layer(k + 1, aa.get("kicker", "여담"), aa.get("title", ""), aa.get("lines", [])[:2])
+    return out
 
 
 def reel_html25(d):
     t = pick(d); it = d["items"][0]
     html_ = reel_html(d)
     A, B = INS[t]
+    dur = float(d.get("reel_sec", REEL_DUR)); na = max(1, int(d.get("reel_asides", 1)))
+    extra = dur - REEL_DUR
+    EL = EXP_LEN + extra * 0.4 if na > 1 else EXP_LEN + extra / 2
+    AL = (dur - 15.0 - EL) / na
     js = f"""
-const A={A},B={B},EL={EXP_LEN},AL={ASIDE_LEN};
+const A={A},B={B},EL={EL},AL={AL},NA={na},DUR={dur};
 function ovs(id,lt,len){{const o=document.getElementById(id);if(!o)return;const op=Math.min(1,Math.max(0,Math.min(lt/.35,(len-lt)/.35)));
  o.style.opacity=(lt>=0&&lt<=len)?op:0;o.querySelectorAll('.ol').forEach((l,i)=>{{const a=Math.min(1,Math.max(0,(lt-.5-i*.7)/.4));l.style.opacity=a;l.style.transform=`translateY(${{(1-a)*30}}px)`}})}}
 function draw25(T){{
- let m, e=-1, s=-1;
- if(T<A) m=T; else if(T<A+EL){{m=A;e=T-A}} else if(T<B+EL){{m=T-EL}} else if(T<B+EL+AL){{m=B;s=T-B-EL}} else m=T-EL-AL;
- draw(m); ovs('ov0',e,EL); ovs('ov1',s,AL);
- const pb=document.getElementById('pb'); if(pb) pb.style.width=(T/{REEL_DUR}*100)+'%';
+ let m, e=-1, s=-1, k=-1; const AT=AL*NA;
+ if(T<A) m=T; else if(T<A+EL){{m=A;e=T-A}} else if(T<B+EL){{m=T-EL}} else if(T<B+EL+AT){{m=B;s=T-B-EL;k=Math.floor(s/AL);s=s-k*AL}} else m=T-EL-AT;
+ draw(m); ovs('ov0',e,EL); for(let j=0;j<NA;j++) ovs('ov'+(j+1), j===k?s:-1, AL);
+ const pb=document.getElementById('pb'); if(pb) pb.style.width=(T/DUR*100)+'%';
 }}"""
     return html_.replace("</body>", _overlay(d, it, t == "collage") + f"<script>{js}</script></body>")
 
