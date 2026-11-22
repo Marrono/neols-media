@@ -528,25 +528,73 @@ def _overlay(d, it, light):
     return out
 
 
+HOOK_LEN = 2.2
+
+
+def _hook2(d, it):
+    """릴스 첫 2.2초: 화면 가득 사진 + 첫 프레임부터 큰 숫자·훅 + 끝까지 볼 이유 한 줄."""
+    ps = photos(it); ph = ps[0] if ps else None
+    rl = it.get("reel") or {}
+    hs = rl.get("hook_stat") or stat(it)
+    lines = hook(it).split("\n")
+    tease = rl.get("tease", "")
+    bg = f"background:url({data_url(ph['path'])}) center/cover" if ph else "background:#0B0B0C"
+    wi = 0; hl = []
+    for ln in lines:
+        ws = []
+        for w in ln.split(" "):
+            ws.append(f"<span class='hw' data-i='{wi}' style='display:inline-block;margin-right:.24em'>{esc(w)}</span>"); wi += 1
+        hl.append("".join(ws))
+    top_h = 820 if hs else 560
+    num = ""
+    if hs:
+        v = hs["value"]; fs = 250 if len(v) <= 5 else (190 if len(v) <= 7 else 150)
+        num = (f"<div style='position:absolute;left:70px;right:90px;top:420px;color:#fff'>"
+               f"<div style='font-size:46px;font-weight:800;color:#C9D4FF;letter-spacing:-0.01em'>{esc(hs['label'])}</div>"
+               f"<div id='hkv' style='font-size:{fs}px;font-weight:900;line-height:1.02;letter-spacing:-0.045em;white-space:nowrap;transform-origin:left center;margin-top:6px'>"
+               f"<span style='background:linear-gradient(transparent 64%,#3D5AFE 64%);padding:0 6px'>{esc(v)}</span></div></div>")
+    return (f"<div id='hk' style='position:absolute;inset:0;z-index:90;overflow:hidden;background:#000'>"
+            f"<div id='hkbg' style='position:absolute;inset:-60px;{bg}'></div>"
+            "<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.6) 0%,rgba(0,0,0,.2) 30%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.92) 100%)'></div>"
+            + num
+            + f"<div style='position:absolute;left:70px;right:110px;top:{top_h}px'>"
+            + f"<div id='hkh' style='color:#fff;font-size:94px;font-weight:900;line-height:1.2;letter-spacing:-0.02em;text-shadow:0 4px 24px rgba(0,0,0,.5)'>{'<br>'.join(hl)}</div>"
+            + (f"<div id='hkt' style='display:inline-block;margin-top:40px;background:#fff;color:#111;border-radius:70px;padding:20px 38px;font-size:42px;font-weight:800;opacity:0;transform-origin:left center'>{esc(tease)}</div>" if tease else "")
+            + "</div>"
+            + "<div id='hkf' style='position:absolute;inset:0;background:#fff;opacity:0'></div>"
+            + "</div>")
+
+
 def reel_html25(d):
     t = pick(d); it = d["items"][0]
     html_ = reel_html(d)
     A, B = INS[t]
     dur = max(35.0, float(d.get("reel_sec", 35))); na = max(1, int(d.get("reel_asides", 2)))
-    extra = dur - REEL_DUR
-    EL = EXP_LEN + extra * 0.4 if na > 1 else EXP_LEN + extra / 2
-    AL = (dur - 15.0 - EL) / na
+    HK = HOOK_LEN; S0 = 3.0; BASE_REST = 12.0
+    EL = EXP_LEN + (dur - REEL_DUR) * 0.4 if na > 1 else EXP_LEN + (dur - REEL_DUR) / 2
+    AL = (dur - HK - BASE_REST - EL) / na
     js = f"""
-const A={A},B={B},EL={EL},AL={AL},NA={na},DUR={dur};
-function ovs(id,lt,len){{const o=document.getElementById(id);if(!o)return;const op=Math.min(1,Math.max(0,Math.min(lt/.35,(len-lt)/.35)));
- o.style.opacity=(lt>=0&&lt<=len)?op:0;o.querySelectorAll('.ol').forEach((l,i)=>{{const a=Math.min(1,Math.max(0,(lt-.5-i*.7)/.4));l.style.opacity=a;l.style.transform=`translateY(${{(1-a)*30}}px)`}})}}
+const A={A},B={B},EL={EL},AL={AL},NA={na},DUR={dur},HK={HK},S0={S0};
+function ovs(id,lt,len){{const o=document.getElementById(id);if(!o)return;const op=Math.min(1,Math.max(0,Math.min(lt/.3,(len-lt)/.3)));
+ o.style.opacity=(lt>=0&&lt<=len)?op:0; const bg=o.firstElementChild; if(bg&&lt>=0) bg.style.transform=`scale(${{1.12+0.1*Math.min(1,lt/len)}})`;
+ o.querySelectorAll('.ol').forEach((l,i)=>{{const a=Math.min(1,Math.max(0,(lt-.25-i*.45)/.3));l.style.opacity=a;l.style.transform=`translateY(${{(1-a)*30}}px)`}})}}
+function hook2(T){{const o=document.getElementById('hk'); if(!o) return; if(T>=HK){{o.style.opacity=0;return}}
+ const out=P(T,HK-.22,HK); o.style.opacity=1-P(T,HK-.08,HK);
+ o.style.transform=`scale(${{1+out*.12}})`; o.style.filter=`blur(${{out*10}}px)`;
+ const bg=document.getElementById('hkbg'); bg.style.transform=`scale(${{1.34-0.24*E(P(T,0,.55))-0.05*T/HK}})`;
+ const v=document.getElementById('hkv'); if(v) v.style.transform=`scale(${{1.16-0.16*E(P(T,0,.28))}})`;
+ document.querySelectorAll('#hk .hw').forEach(w=>{{const i=+w.dataset.i,a=E(P(T,-.3+i*.06,.02+i*.06));w.style.opacity=.3+.7*a;w.style.transform=`translateY(${{(1-a)*26}}px)`}});
+ const tz=document.getElementById('hkt'); if(tz){{const a=BK(P(T,.95,1.25));tz.style.opacity=P(T,.95,1.05);tz.style.transform=`scale(${{.7+.3*a}})`}}
+ document.getElementById('hkf').style.opacity=.85*P(T,HK-.24,HK-.12)*(1-P(T,HK-.12,HK));}}
 function draw25(T){{
- let m, e=-1, s=-1, k=-1; const AT=AL*NA;
- if(T<A) m=T; else if(T<A+EL){{m=A;e=T-A}} else if(T<B+EL){{m=T-EL}} else if(T<B+EL+AT){{m=B;s=T-B-EL;k=Math.floor(s/AL);s=s-k*AL}} else m=T-EL-AT;
+ hook2(T);
+ const U=T<HK?0:T-HK, a1=A-S0, b1=B-S0, AT=AL*NA;
+ let m, e=-1, s=-1, k=-1;
+ if(U<a1) m=S0+U; else if(U<a1+EL){{m=A;e=U-a1}} else if(U<b1+EL){{m=S0+U-EL}} else if(U<b1+EL+AT){{m=B;s=U-b1-EL;k=Math.floor(s/AL);s=s-k*AL}} else m=S0+U-EL-AT;
  draw(m); ovs('ov0',e,EL); for(let j=0;j<NA;j++) ovs('ov'+(j+1), j===k?s:-1, AL);
  const pb=document.getElementById('pb'); if(pb) pb.style.width=(T/DUR*100)+'%';
 }}"""
-    return html_.replace("</body>", _overlay(d, it, t == "collage") + f"<script>{js}</script></body>")
+    return html_.replace("</body>", _overlay(d, it, t == "collage") + _hook2(d, it) + f"<script>{js}</script></body>")
 
 
 # ═════════════ 문구 다듬기 (2026-11-20 밤) ═════════════
