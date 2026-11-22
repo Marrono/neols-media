@@ -291,7 +291,8 @@ function cdText(){
 }
 function startCountdown(d){
   busyStart = Date.now();
-  busyEst = d.kind === 'reel' ? 75 : Math.max(15, 8 + 3*((d.publicImages||[]).length));
+  // 실제 측정: 카드뉴스는 예상보다 15초 이상 더 걸려서 +15초 보정(2026-11-22)
+  busyEst = d.kind === 'reel' ? 75 : Math.max(30, 23 + 3*((d.publicImages||[]).length));
   clearInterval(cdTimer);
   cdTimer = setInterval(() => { const el = document.getElementById('pubCd'); if (el) el.textContent = cdText(); if (!busyId) clearInterval(cdTimer); }, 1000);
 }
