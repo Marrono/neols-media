@@ -6,6 +6,7 @@ import html
 import json
 import sys
 from pathlib import Path
+from cine import week_label
 
 from playwright.sync_api import sync_playwright
 
@@ -43,7 +44,7 @@ def page(body, extra_css=""):
 
 def header(d):
     return (f"<div class='top'><span class='brand'>Ne<i>ol</i>s</span>"
-            f"<span class='date'>{d['date']} ({d['weekday']})</span></div><div class='rule'></div>")
+            f"<span class='date'>{week_label(d['date'])}</span></div><div class='rule'></div>")
 
 
 def cover(d):
@@ -65,7 +66,7 @@ def cover(d):
     .t {{ flex:1; font-weight:700; }}
     """
     body = (header(d)
-            + f"<div class='big'>{d['date'][5:].replace('.', '월 ')}일 {d['weekday']}요일</div>"
+            + f"<div class='big'>{week_label(d['date'])}</div>"
             + f"<div class='title'>Ne<em>ol</em>s<span class='pt'>.</span></div>"
             + f"<div class='slogan'>{esc(d['slogan'])}</div>"
             + f"<div class='sub'>{esc(d['cover_sub'])}</div>"
@@ -103,7 +104,7 @@ def cover_single(d):
         foot_left = d['handle']
     body = (header(d)
             + ("<div class='ph'></div>" if ph else "")
-            + f"<div class='lab'>{int(m)}월 {int(day)}일의 뉴스</div><div class='cat'>{esc(it['category'])}</div>"
+            + f"<div class='lab'>{week_label(d['date'])}의 뉴스</div><div class='cat'>{esc(it['category'])}</div>"
             + f"<div class='title'>{esc(it['title'])}</div>"
             + f"<div class='teaser'><div class='t1'>THEN</div><div class='t2'>{esc(it['then_label'])}</div>"
             + "<div class='t3'>이 뉴스의 어제로 넘겨 보세요 →</div></div>"

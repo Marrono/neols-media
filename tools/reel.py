@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from cine import week_label
 
 from playwright.sync_api import sync_playwright
 
@@ -58,12 +59,12 @@ def page(body):
 
 
 def top(d):
-    return f"<div class='top'><span class='brand'>Ne<i>ol</i>s</span><span class='date'>{d['date']} ({d['weekday']})</span></div>"
+    return f"<div class='top'><span class='brand'>Ne<i>ol</i>s</span><span class='date'>{week_label(d['date'])}</span></div>"
 
 
 def intro(d):
     m, day = d["date"][5:].split(".")
-    return page(top(d) + f"<div class='center'><div class='hsm'>{int(m)}월 {int(day)}일의 뉴스</div>"
+    return page(top(d) + f"<div class='center'><div class='hsm'>{week_label(d['date'])}의 뉴스</div>"
                 f"<div class='hero'>Ne<i>ol</i>s<i>.</i></div>"
                 f"<div class='hsub'>오늘의 뉴스에도<br>어제가 있어요</div>"
                 + (f"<div class='hsm'>{len(d['items'])}개의 뉴스, 그리고 그 뉴스의 어제</div></div>" if len(d['items']) > 1

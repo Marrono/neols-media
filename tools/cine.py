@@ -16,6 +16,20 @@ import subprocess
 ACCENT, LIGHT = "#2F5BFF", "#7D97FF"
 
 
+
+def week_label(date_str):
+    """'2026.11.23' -> '11월 넷째 주' (월요일 시작, 그 주 목요일이 속한 달 기준)."""
+    import datetime as _dt
+    try:
+        y, m, dd = [int(x) for x in date_str.split(".")[:3]]
+        day = _dt.date(y, m, dd)
+    except Exception:
+        return "이번 주"
+    thu = day + _dt.timedelta(days=3 - day.weekday())
+    n = (thu.day - 1) // 7 + 1
+    names = ["첫째", "둘째", "셋째", "넷째", "다섯째"]
+    return f"{thu.month}월 {names[n-1]} 주"
+
 def esc(s):
     return html.escape(str(s)).replace("\n", "<br>")
 
@@ -125,7 +139,7 @@ def c_cover(d, it, ps, k, n):
     """ + ("" if ph else ".bg0{position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,#1d2a66 0,#0B0B0C 60%)}")
     body = ((_bg(ph, "transform:scale(1.04)") if ph else "<div class='bg0'></div>") + "<div class='shade'></div>"
             + _chrome(d, k, n, _now_tag(d), f"사진 · {esc(ph['credit'])}" if ph else "", "넘겨서 보기 →")
-            + f"<div class='cat'>{esc(it['category'])} · {int(d['date'][5:7])}월 {int(d['date'][8:10])}일의 뉴스</div>"
+            + f"<div class='cat'>{esc(it['category'])} · {week_label(d['date'])}의 뉴스</div>"
             + f"<div class='hook'>{h_html}</div>"
             + f"<div class='nx'><b>THEN</b>{esc(it['then_label'])} — 이 뉴스의 어제까지</div>")
     return _page(css, body)

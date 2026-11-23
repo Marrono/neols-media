@@ -167,7 +167,7 @@ def collage_cards(d):
     it = d["items"][0]; ps = photos(it); visuals, extras, n = _plan(it)
     p0 = ps[0] if ps else None; p1 = ps[1] if len(ps) > 1 else p0
     ty = year_of(it["then_label"]); head, sub = then_parts(it)
-    h = hook(it).split("\n"); ntag = f"NOW · {d['date']}"
+    h = hook(it).split("\n"); ntag = f"NOW · {d['date'][:7]}"
     MK = f".mk{{background:linear-gradient(transparent 55%,#C9D4FF 55%);padding:0 4px}}"
     pages = []; k = 0
     # 표지
@@ -364,7 +364,7 @@ body{{background:#F7F6F2;color:#111}}
 <div class="abs src" id="src">출처 · {esc(it['source'])}</div>
 {_end(d, dark=True)}"""
     js = f"""
-const HASST={'true' if st else 'false'}, NT="NOW · {d['date']}", TT="THEN · {esc(it['then_label'])}";
+const HASST={'true' if st else 'false'}, NT="NOW · {d['date'][:7]}", TT="THEN · {esc(it['then_label'])}";
 function drop(id,t,a,b,rot){{const p=BK(P(t,a,a+.5)),o=P(t,b-.3,b);set(id,P(t,a,a+.12)*(1-o),`translateY(${{(1-p)*-500-o*60}}px) rotate(${{rot+(1-p)*8}}deg) scale(${{1-o*.05}})`)}}
 function draw(t){{
  [[0,3],[3,7],[7,11],[11,13]].forEach(([a,b],i)=>$('#s'+(i+1)).style.width=(P(t,a,b)*100)+'%');
@@ -425,7 +425,7 @@ def _img_stat(d, it, ps, light):
     if light:
         css = POL + ".b{position:absolute;left:72px;right:90px;bottom:120px}"
         body = (_pol(ph, f"left:90px;top:170px;width:900px;height:{560 if it.get('story2') else 700}px;transform:rotate(2deg)", "background-position:50% 45%")
-                + cine._chrome(d, 1, 6, f"NOW · {d['date']}", "") + f"<div class='b'>{big}</div>")
+                + cine._chrome(d, 1, 6, f"NOW · {d['date'][:7]}", "") + f"<div class='b'>{big}</div>")
         return _page(css, body, True)
     css = ".b{position:absolute;left:72px;right:90px;bottom:120px}"
     body = (cine._bg(ph, "transform:scale(1.06)") + "<div class='shade'></div>"
@@ -613,8 +613,7 @@ def _credit(m):
 
 
 def polish(html_, d):
-    y, mo, dd = (d.get("date", "") + "..").split(".")[:3]
-    today = f"{int(mo)}월 {int(dd)}일 뉴스" if mo.isdigit() and dd.isdigit() else "오늘의 뉴스"
+    today = f"{cine.week_label(d.get('date', ''))} 뉴스"
     s = html_
     # 오른쪽 위 알약: 큰 NOW/THEN 라벨과 겹치지 않게 한국어로
     s = _re.sub(r"(class='tag'>)NOW · [^<]*<", rf"\g<1>{today}<", s)
