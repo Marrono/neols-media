@@ -1,0 +1,124 @@
+{
+ "date": "2026.11.24",
+ "weekday": "화",
+ "handle": "@neols.news",
+ "slogan": "잊혀진 뉴스와 오늘의 뉴스를 잇다",
+ "items": [
+  {
+   "category": "내 돈·주식",
+   "template": "collage",
+   "title": "CEO 한 명에\n주가가 출렁?",
+   "points": [
+    "엔비디아 젠슨 황이 11월 12일 물러난 지 약 열하루 만에, 이사회 만장일치로 CEO에 복귀했어요",
+    "복귀 소식에 엔비디아 주가는 장중 30% 넘게 뛰었고, SK하이닉스도 함께 올랐어요",
+    "사임 당일엔 13% 급락으로 출발해 4.34% 떨어진 채 마감했어요"
+   ],
+   "story2": "사람 한 명이 나가고 돌아왔을 뿐인데, 세계 시가총액 상위 회사 주가가 위아래로 크게 흔들렸어요.",
+   "story3": "29년 전에도 창업자가 돌아오자 회사가 다시 살아난 일이 있었어요.",
+   "then_label": "1997년",
+   "then": "애플이 스티브 잡스의 회사 넥스트를 4억2700만 달러에 사들이며 잡스가 돌아왔고, 그해 9월 임시 CEO가 됐어요.",
+   "then_points": [
+    "1997년 10억4천만 달러 적자였던 애플은",
+    "이듬해 3억900만 달러 흑자로 돌아섰어요"
+   ],
+   "link": "29년 전 파산 직전 애플에 돌아온 잡스처럼, 'CEO 리스크'는 늘 있었어요.",
+   "source": "네이버 랭킹 다수 언론(2026.11.24)·블루밍비트·더팩트·MTN(2026.11)",
+   "then_source": "computinghistory.org.uk·TechCrunch·SlashGear",
+   "photos": [
+    {
+     "path": "photos/Nasdaq_Tower_May_2026.jpg",
+     "credit": "Nielsoncaetanosalmeron / Wikimedia Commons / CC BY 4.0 · 잘라서 사용"
+    },
+    {
+     "path": "photos/Wall_Street_sign_US_Flag_May_2023_.JPG",
+     "credit": "Benoît Prieur / Wikimedia Commons / CC0"
+    },
+    {
+     "path": "photos/5C2A5953R_-_49913961083_Silicon_Wafer_20200519.jpg",
+     "credit": "Rob Bulmahn / Wikimedia Commons / CC BY 2.0 · 잘라서 사용"
+    }
+   ],
+   "photo": {
+    "path": "photos/Nasdaq_Tower_May_2026.jpg",
+    "credit": "Nielsoncaetanosalmeron / Wikimedia Commons / CC BY 4.0 · 잘라서 사용"
+   },
+   "visuals": [
+    {
+     "type": "timeline",
+     "title": "열하루 사이 무슨 일이",
+     "data": [
+      [
+       "11월 12일",
+       "CEO 사임, 주가 4.34%↓ 마감"
+      ],
+      [
+       "이틀 뒤",
+       "누적 6.26% 하락"
+      ],
+      [
+       "11월 17일",
+       "\"부르면 돌아가겠다\" 성명"
+      ],
+      [
+       "11월 23일",
+       "이사회 만장일치 복귀"
+      ]
+     ],
+     "source": "블루밍비트·더팩트·시대·네이버 랭킹"
+    }
+   ],
+   "reel": {
+    "hook": "CEO 한 명에\n주가가 출렁?",
+    "hook_stat": {
+     "label": "복귀 소식에 엔비디아 장중",
+     "value": "+30%"
+    },
+    "tease": "'1인 리스크', 끝까지 보면 보여요",
+    "stat": {
+     "label": "사임 당일 엔비디아 종가",
+     "value": "-4.34%"
+    },
+    "chips": [
+     [
+      "down",
+      "사임 날 13% 급락 출발"
+     ],
+     [
+      "up",
+      "복귀 날 장중 30%대 급등"
+     ]
+    ],
+    "then_head": "1997년 잡스의 귀환",
+    "then_sub": "10억 달러 적자 애플,\n1년 만에 흑자로"
+   },
+   "explain": {
+    "title": "1인\n리스크란?",
+    "lines": [
+     "회사 가치가 한 사람에게 너무 크게 기대 있으면 그 사람의 거취만으로 주가가 흔들려요",
+     "엔비디아는 임원 약 60명이 CEO에게 직접 보고하는 독특한 구조였어요",
+     "그래서 시장에선 '대체 불가'가 장점이자 위험이라는 말이 나왔어요"
+    ]
+   },
+   "asides": [
+    {
+     "kicker": "사임 날 개미들",
+     "title": "30분 만에\n역대 최대 매수",
+     "lines": [
+      "주가가 급락하자 개인 투자자들이 오히려 사들였어요",
+      "개장 30분 동안 개인 순매수가 약 1억1100만 달러로 역대 최대였어요(반다리서치)",
+      "하지만 주가가 빠질 때 사는 게 늘 답은 아니에요"
+     ]
+    },
+    {
+     "kicker": "기억해 둘 것",
+     "title": "한 사람보다\n숫자를 봐요",
+     "lines": [
+      "CEO 소식에 주가가 크게 움직이는 건 짧은 흐름일 수 있어요",
+      "실적과 사업 전망이 결국 주가를 정한다는 분석이 많아요",
+      "이 콘텐츠는 투자 권유가 아니에요"
+     ]
+    }
+   ]
+  }
+ ]
+}
