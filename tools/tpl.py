@@ -93,7 +93,7 @@ def split_cards(d):
     yy, mm = (d["date"].split(".") + ["", ""])[:2]
     body = (f"<div class='h' style='top:0;height:675px'><div class='bg' style=\"{bgimg(p0)}\"></div>"
             f"<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),rgba(0,0,0,.05) 40%,rgba(0,0,0,.8))'></div>"
-            f"<div class='q'><div class='s'>{yy}년 {int(mm) if mm.isdigit() else mm}월, 오늘</div><div class='m'>{'<br>'.join(esc(x) for x in h)}</div></div></div>"
+            f"<div class='q'><div class='s'>{cine.week_label(d.get('date',''))}, 오늘</div><div class='m'>{'<br>'.join(esc(x) for x in h)}</div></div></div>"
             f"<div class='h' style='top:675px;height:675px'><div class='bg' style=\"{bgimg(p0, SEPIA)}\"></div>"
             f"<div style='position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.8),rgba(0,0,0,.3) 60%,rgba(0,0,0,.6))'></div>"
             f"<div class='a'><div class='s'>{esc(it['then_label'])}, 그때는</div><div class='m'>{esc(ans)}</div></div></div>"
@@ -297,7 +297,7 @@ def split_reel_html(d):
  <div class="tq" id="tq"><div class="s">{esc(it['then_label'])}, 그때는</div><div class="m">{esc(it.get('reel',{}).get('then_head') or head)}</div></div>
  <div class="th" id="tf" style="top:210px"><div class="h">{esc(head)}</div>{f"<div class='s'>{esc(sub)}</div>" if sub else ''}</div></div>
 <div class="dv" id="dv"></div><div class="brand">Ne<i>ol</i>s</div>
-<div class="hook" id="hook"><div class="s">{d['date'][:4]}년 {int(d['date'][5:7])}월, 오늘</div><div class="m">{'<br>'.join(esc(x) for x in h)}</div></div>
+<div class="hook" id="hook"><div class="s">{cine.week_label(d.get('date',''))}, 오늘</div><div class="m">{'<br>'.join(esc(x) for x in h)}</div></div>
 <div class="mid" id="mid">그때는 어땠을까?</div>
 <div class="link" id="link">{esc(it['link'])}</div>
 <div class="cr cred" id="cs" style="bottom:300px;opacity:0">출처 · {esc(it['source'])}</div>
